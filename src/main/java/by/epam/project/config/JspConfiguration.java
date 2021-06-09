@@ -10,19 +10,16 @@ import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
 @Configuration
-public class ApplicationConfiguration implements WebMvcConfigurer {
+public class JspConfiguration implements WebMvcConfigurer {
 
     @Bean
     public ViewResolver jspViewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
 
         viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/");
-        viewResolver.setSuffix(".jsp");
-        viewResolver.setContentType("text/html");
 
-        // Make sure > Thymeleaf order & FreeMarker order.
-        viewResolver.setOrder(1);
+
+        viewResolver.setContentType("text/html");
 
         return viewResolver;
     }

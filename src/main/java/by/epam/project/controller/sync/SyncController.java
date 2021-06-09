@@ -6,6 +6,9 @@ import by.epam.project.exception.CommandException;
 import by.epam.project.model.connection.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,22 +24,23 @@ import static by.epam.project.controller.parameter.Parameter.IS_DEV_MODE;
 /**
  * The type Controller.
  */
-public class Controller extends HttpServlet {
+@Controller
+public class SyncController {
     private static final Logger logger = LogManager.getLogger();
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    @PostMapping("/do")
+    protected String doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        return processRequest(request, response);
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    @GetMapping("/do")
+    protected String doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        return processRequest(request, response);
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response)
+    private String processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         boolean isDevMode = Boolean.parseBoolean(System.getenv(IS_DEV_MODE));
 
@@ -53,13 +57,7 @@ public class Controller extends HttpServlet {
             router.setCurrentPage(ERROR_500);
         }
 
-        String currentPage = router.getCurrentPage();
-
-        if (router.getCurrentType().equals(Router.Type.FORWARD)) {
-            request.getRequestDispatcher(currentPage).forward(request, response);
-        } else {
-            response.sendRedirect(currentPage);
-        }
+        return router.getCurrentPage();
     }
 }
 
