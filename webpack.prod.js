@@ -39,7 +39,7 @@ var config = {
     },
     resolve: {
         modules: [
-            path.join(__dirname, 'src', 'main', 'webapp'),
+            path.join(__dirname, 'src', 'main', 'resources'),
             path.join(__dirname, 'node_modules'),
         ],
     },
@@ -51,9 +51,9 @@ var config = {
 
 var guestConfiq = Object.assign({}, config, {
     name: "guest",
-    entry: path.join(__dirname, 'src', 'main', 'webapp', 'vuejs', 'guest', 'guest.js'),
+    entry: path.join(__dirname, 'src', 'main', 'resources', 'vuejs', 'guest', 'guest.js'),
     output: {
-        path: __dirname + "/src/main/webapp/js",
+        path: __dirname + "/src/main/resources/js",
         publicPath: "/",
         filename: "guest.js"
     },
@@ -61,9 +61,9 @@ var guestConfiq = Object.assign({}, config, {
 
 var clientConfiq = Object.assign({}, config, {
     name: "client",
-    entry: path.join(__dirname, 'src', 'main', 'webapp', 'vuejs', 'client', 'client.js'),
+    entry: path.join(__dirname, 'src', 'main', 'resources', 'vuejs', 'client', 'client.js'),
     output: {
-        path: __dirname + "/src/main/webapp/js",
+        path: __dirname + "/src/main/resources/js",
         publicPath: "/",
         filename: "client.js"
     },
@@ -71,9 +71,9 @@ var clientConfiq = Object.assign({}, config, {
 
 var adminConfiq = Object.assign({}, config, {
     name: "admin",
-    entry: path.join(__dirname, 'src', 'main', 'webapp', 'vuejs', 'admin', 'admin.js'),
+    entry: path.join(__dirname, 'src', 'main', 'resources', 'vuejs', 'admin', 'admin.js'),
     output: {
-        path: __dirname + "/src/main/webapp/js",
+        path: __dirname + "/src/main/resources/js",
         publicPath: "/",
         filename: "admin.js"
     },
@@ -81,9 +81,9 @@ var adminConfiq = Object.assign({}, config, {
 
 var errorConfiq = Object.assign({}, config, {
     name: "error",
-    entry: path.join(__dirname, 'src', 'main', 'webapp', 'vuejs', 'error', 'error.js'),
+    entry: path.join(__dirname, 'src', 'main', 'resources', 'vuejs', 'error', 'error.js'),
     output: {
-        path: __dirname + "/src/main/webapp/js",
+        path: __dirname + "/src/main/resources/js",
         publicPath: "/",
         filename: "error.js"
     },
@@ -91,9 +91,9 @@ var errorConfiq = Object.assign({}, config, {
 
 var notificationSuccessConfiq = Object.assign({}, config, {
     name: "error",
-    entry: path.join(__dirname, 'src', 'main', 'webapp', 'vuejs', 'notification', 'success', 'notificationSuccess.js'),
+    entry: path.join(__dirname, 'src', 'main', 'resources', 'vuejs', 'notification', 'success', 'notificationSuccess.js'),
     output: {
-        path: __dirname + "/src/main/webapp/js",
+        path: __dirname + "/src/main/resources/js",
         publicPath: "/",
         filename: "notificationSuccess.js"
     },
