@@ -25,8 +25,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            <version>1.5.2.RELEASE</version>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <dependency>
