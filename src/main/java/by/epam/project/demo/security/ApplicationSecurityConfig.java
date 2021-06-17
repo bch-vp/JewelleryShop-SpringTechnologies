@@ -13,6 +13,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 import javax.crypto.SecretKey;
-
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -28,16 +29,19 @@ import javax.crypto.SecretKey;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final DataSource dataSource;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationUserService applicationUserService;
     private final SecretKey secretKey;
     private final JwtConfig jwtConfig;
 
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder,
+    public ApplicationSecurityConfig(DataSource dataSource,
+                                     PasswordEncoder passwordEncoder,
                                      ApplicationUserService applicationUserService,
                                      SecretKey secretKey,
                                      JwtConfig jwtConfig) {
+        this.dataSource = dataSource;
         this.passwordEncoder = passwordEncoder;
         this.applicationUserService = applicationUserService;
         this.secretKey = secretKey;
@@ -46,10 +50,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        String[] adminUrls = ApplicationUserRole.ADMIN.getPermissions().toArray(String[]::new);
+        String[] clientUrls = ApplicationUserRole.CLIENT.getPermissions().toArray(String[]::new);
+        String[] guestUrls = ApplicationUserRole.GUEST.getPermissions().toArray(String[]::new);
+
         http
                 .csrf().disable()
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig),JwtUsernameAndPasswordAuthenticationFilter.class)
@@ -58,11 +66,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                                         "index",
                                         "/css/*",
                                         "/js/**").permitAll()
-                .antMatchers("/api/**").hasRole(RolePermission.ADMIN.name())
+                .regexMatchers(guestUrls).permitAll()
+                .regexMatchers(adminUrls).hasRole(RolePermission.ADMIN.name())
+                .regexMatchers(clientUrls).hasRole(RolePermission.CLIENT.name())
                 .anyRequest()
-                .authenticated()
-                .and()
-                .logout().logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
+                .authenticated();
     }
 
     @Override
