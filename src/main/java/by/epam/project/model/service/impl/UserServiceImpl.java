@@ -4,6 +4,7 @@ import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.parameter.ContentKey;
 import by.epam.project.controller.parameter.ErrorKey;
 import by.epam.project.controller.sync.command.CommandType;
+import by.epam.project.demo.auth.UserRrepository;
 import by.epam.project.exception.DaoException;
 import by.epam.project.exception.ServiceException;
 import by.epam.project.model.dao.ProductDao;
@@ -14,6 +15,7 @@ import by.epam.project.model.entity.Order;
 import by.epam.project.model.entity.Product;
 import by.epam.project.model.entity.User;
 import by.epam.project.model.service.UserService;
+import by.epam.project.security.ApplicationUserRole;
 import by.epam.project.util.ContentUtil;
 import by.epam.project.util.EncryptPasswordUtil;
 import by.epam.project.util.ImageUtil;
@@ -28,6 +30,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -70,7 +78,11 @@ import static by.epam.project.model.service.impl.ImageCriterion.FIRST;
 /**
  * The type User service.
  */
-public class UserServiceImpl implements UserService {
+@Service
+public class UserServiceImpl implements UserService, UserDetailsService {
+    @Autowired
+    private UserRrepository userRrepository;
+
     private static final UserServiceImpl instance = new UserServiceImpl();
     private final UserDao userDao = UserDaoImpl.getInstance();
     private final ProductDao productDao = ProductDaoImpl.getInstance();
@@ -88,6 +100,29 @@ public class UserServiceImpl implements UserService {
      */
     public static UserServiceImpl getInstance() {
         return instance;
+    }
+
+
+
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        Optional<User> userOptional= userRrepository.findByLogin(login);
+        if (userOptional.isEmpty()) {
+            throw new UsernameNotFoundException("Unknown user by login: " + login);
+        }
+        User user = userOptional.get();
+
+        String role = user.getRole().name();
+        String[] authorities = ApplicationUserRole.valueOf(role).getPermissions().toArray(String[]::new);
+
+        String password = userRrepository.findPasswordByLogin(login).get();
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+                .username(login)
+                .password(password)
+                .roles(user.getRole().name())
+                .authorities(authorities)
+                .build();
+        return userDetails;
     }
 
     @Override

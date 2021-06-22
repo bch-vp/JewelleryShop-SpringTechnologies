@@ -1,8 +1,17 @@
 package by.epam.project.model.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * The type User.
  */
+@Entity
+@Table(name = "users")
 public class User {
 
     /**
@@ -41,13 +50,31 @@ public class User {
         BANNED
     }
 
-    private long id;
+    @Id
+    private Long id;
+
     private String login;
+
+    private String password;
+
+    @Column(name = "first_name")
+
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "telephone_number")
     private String telephoneNumber;
+
     private String email;
+
+    @Column(name = "role_id")
+    @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(name = "status_id")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     /**

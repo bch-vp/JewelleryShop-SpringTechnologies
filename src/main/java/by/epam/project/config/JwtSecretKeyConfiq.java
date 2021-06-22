@@ -1,4 +1,4 @@
-package by.epam.project.demo.jwt;
+package by.epam.project.config;
 
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import javax.crypto.SecretKey;
 
 @Configuration
-public class JwtSecretKey {
-
+public class JwtSecretKeyConfiq {
     private final JwtConfig jwtConfig;
 
     @Autowired
-    public JwtSecretKey(JwtConfig jwtConfig) {
+    public JwtSecretKeyConfiq(JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
     }
 

@@ -1,6 +1,7 @@
-package by.epam.project.demo.jwt;
+package by.epam.project.controller.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import by.epam.project.config.JwtConfig;
+import by.epam.project.util.JsonUtil;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Map;
 
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -36,12 +38,11 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
-            UsernameAndPasswordAuthenticationRequest authenticationRequest = new ObjectMapper()
-                    .readValue(request.getInputStream(), UsernameAndPasswordAuthenticationRequest.class);
+            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    authenticationRequest.getUsername(),
-                    authenticationRequest.getPassword()
+                    requestParameters.get("login"),
+                    requestParameters.get("password")
             );
 
             return authenticationManager.authenticate(authentication);

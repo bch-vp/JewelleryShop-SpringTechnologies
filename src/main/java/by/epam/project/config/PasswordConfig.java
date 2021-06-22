@@ -1,4 +1,4 @@
-package by.epam.project.demo.security;
+package by.epam.project.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,3 +13,4 @@ public class PasswordConfig {
         return new BCryptPasswordEncoder(10);
     }
 }
+

@@ -1,5 +1,6 @@
-package by.epam.project.demo.jwt;
+package by.epam.project.controller.filter;
 
+import by.epam.project.config.JwtConfig;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

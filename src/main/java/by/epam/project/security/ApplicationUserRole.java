@@ -1,4 +1,4 @@
-package by.epam.project.demo.security;
+package by.epam.project.security;
 
 import com.mysql.cj.xdevapi.Client;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,6 +8,34 @@ import java.util.stream.Collectors;
 
 
 public enum ApplicationUserRole {
+    GUEST(Set.of(
+            "\\/do\\?command=passing_by_guest",
+            "\\/ao\\?command=change_language",
+            "\\/ajax\\?command=check_login_existence",
+            "\\/ajax\\?command=load_all_products_by_category",
+            "\\/ajax\\?command=load_all_categories",
+            "\\/ajax\\?command=sign_in",
+            "\\/ajax\\?command=sign_up",
+            "\\/do\\?command=confirm_sign_up",
+            "\\/ajax\\?command=change_password_by_email"
+    )),
+    CLIENT(Set.of(
+            "\\/ajax\\?command=add_product_to_shopping_cart",
+            "\\/do\\?command=change_language",
+                   "\\/ajax\\?command=change_password_by_old_password",
+                   "\\/ajax\\?command=create_order",
+                   "\\/ajax\\?command=load_all_categories",
+                   "\\/ajax\\?command=load_all_orders",
+                   "\\/ajax\\?command=load_all_products_by_category",
+                   "\\/ajax\\?command=load_profile_image",
+                   "\\/ajax\\?command=load_shopping_cart",
+                   "\\/do\\?command=passing_by_client",
+                   "\\/ajax\\?command=remove_product_from_shopping_cart",
+                   "\\/ajax\\?command=remove_profile_image",
+                   "\\/ajax\\?command=sign_out",
+                   "\\/ajax\\?command=update_profile",
+                   "\\/ajax\\?command=upload_profile_image"
+    )),
     ADMIN(Set.of(
             "\\/do\\?command=change_language",
             "\\/ajax\\?command=change_password_by_old_password",
@@ -31,40 +59,6 @@ public enum ApplicationUserRole {
             "\\/ajax\\?command=update_profile",
             "\\/ajax\\?command=upload_product_image",
             "\\/ajax\\?command=upload_profile_image"
-    )),
-    /**
-     * Client role permission.
-     */
-    CLIENT(Set.of(
-            "\\/ajax\\?command=add_product_to_shopping_cart",
-            "\\/do\\?command=change_language",
-            "\\/ajax\\?command=change_password_by_old_password",
-            "\\/ajax\\?command=create_order",
-            "\\/ajax\\?command=load_all_categories",
-            "\\/ajax\\?command=load_all_orders",
-            "\\/ajax\\?command=load_all_products_by_category",
-            "\\/ajax\\?command=load_profile_image",
-            "\\/ajax\\?command=load_shopping_cart",
-            "\\/do\\?command=passing_by_client",
-            "\\/ajax\\?command=remove_product_from_shopping_cart",
-            "\\/ajax\\?command=remove_profile_image",
-            "\\/ajax\\?command=sign_out",
-            "\\/ajax\\?command=update_profile",
-            "\\/ajax\\?command=upload_profile_image"
-    )),
-    /**
-     * Guest role permission.
-     */
-    GUEST(Set.of(
-            "\\/do\\?command=passing_by_guest",
-            "\\/ao\\?command=change_language",
-            "\\/ajax\\?command=check_login_existence",
-            "\\/ajax\\?command=load_all_products_by_category",
-            "\\/ajax\\?command=load_all_categories",
-            "\\/ajax\\?command=sign_in",
-            "\\/ajax\\?command=sign_up",
-            "\\/do\\?command=confirm_sign_up",
-            "\\/ajax\\?command=change_password_by_email"
     ));
 
     private final Set<String> permissions;

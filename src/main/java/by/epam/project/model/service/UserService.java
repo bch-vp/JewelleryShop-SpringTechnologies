@@ -5,6 +5,7 @@ import by.epam.project.exception.ServiceException;
 import by.epam.project.model.entity.Product;
 import by.epam.project.model.entity.User;
 import org.apache.commons.fileupload.FileItem;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 

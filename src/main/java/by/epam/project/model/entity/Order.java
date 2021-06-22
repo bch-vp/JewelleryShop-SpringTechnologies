@@ -1,12 +1,21 @@
 package by.epam.project.model.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * The type Order.
  */
+@Entity
+@Table(name = "orders")
 public class Order {
+
     /**
      * The enum Status.
      */
@@ -21,12 +30,25 @@ public class Order {
         NOT_CONFIRMED
     }
 
+    @Id
     private long id;
+
     private String comment;
+
     private String address;
-    private Date dateCreatedAt;
+
+    @Column(name = "time_created")
+    private Date timeCreated;
+
+    @Column(name = "total_price")
     private BigDecimal totalPrice;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
+
+    public Order() {
+
+    }
 
     /**
      * Instantiates a new Order.
@@ -42,7 +64,7 @@ public class Order {
         this.id = id;
         this.comment = comment;
         this.address = address;
-        this.dateCreatedAt = dateCreatedAt;
+        this.timeCreated = dateCreatedAt;
         this.totalPrice = totalPrice;
         this.status = status;
     }
@@ -60,7 +82,7 @@ public class Order {
         this.id = id;
         this.comment = comment;
         this.address = address;
-        this.dateCreatedAt = createdAt;
+        this.timeCreated = createdAt;
         this.totalPrice = totalPrice;
         this.status = Status.NOT_CONFIRMED;
     }
@@ -76,7 +98,7 @@ public class Order {
     public Order(String comment, String address, Date createdAt, BigDecimal totalPrice) {
         this.comment = comment;
         this.address = address;
-        this.dateCreatedAt = createdAt;
+        this.timeCreated = createdAt;
         this.totalPrice = totalPrice;
         this.status = Status.NOT_CONFIRMED;
     }
@@ -93,7 +115,7 @@ public class Order {
     public Order(String comment, String address, Date createdAt, BigDecimal totalPrice, Status status) {
         this.comment = comment;
         this.address = address;
-        this.dateCreatedAt = createdAt;
+        this.timeCreated = createdAt;
         this.totalPrice = totalPrice;
         this.status = status;
     }
@@ -108,7 +130,7 @@ public class Order {
     public Order(String comment, String address, Date createdAt) {
         this.comment = comment;
         this.address = address;
-        this.dateCreatedAt = createdAt;
+        this.timeCreated = createdAt;
     }
 
     /**
@@ -122,7 +144,7 @@ public class Order {
     public Order(String comment, String address, Date createdAt, Status status) {
         this.comment = comment;
         this.address = address;
-        this.dateCreatedAt = createdAt;
+        this.timeCreated = createdAt;
         this.status = status;
     }
 
@@ -185,8 +207,8 @@ public class Order {
      *
      * @return the date created at
      */
-    public Date getDateCreatedAt() {
-        return dateCreatedAt;
+    public Date getTimeCreated() {
+        return timeCreated;
     }
 
     /**
@@ -194,8 +216,8 @@ public class Order {
      *
      * @param dateCreatedAt the date created at
      */
-    public void setDateCreatedAt(Date dateCreatedAt) {
-        this.dateCreatedAt = dateCreatedAt;
+    public void setTimeCreated(Date dateCreatedAt) {
+        this.timeCreated = dateCreatedAt;
     }
 
     /**
@@ -255,7 +277,7 @@ public class Order {
         if (address != null ? !address.equals(user.address) : user.address != null) {
             return false;
         }
-        if (dateCreatedAt != null ? !dateCreatedAt.equals(user.dateCreatedAt) : user.dateCreatedAt != null) {
+        if (timeCreated != null ? !timeCreated.equals(user.timeCreated) : user.timeCreated != null) {
             return false;
         }
         if (totalPrice != null ? !totalPrice.equals(user.totalPrice) : user.totalPrice != null) {
@@ -270,7 +292,7 @@ public class Order {
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (dateCreatedAt != null ? dateCreatedAt.hashCode() : 0);
+        result = 31 * result + (timeCreated != null ? timeCreated.hashCode() : 0);
         result = 31 * result + (totalPrice != null ? totalPrice.hashCode() : 0);
         return result;
     }
@@ -281,7 +303,7 @@ public class Order {
         sb.append("id='").append(id).append('\'');
         sb.append("comment='").append(comment).append('\'');
         sb.append(", address='").append(address).append('\'');
-        sb.append(", createdAt='").append(dateCreatedAt).append('\'');
+        sb.append(", createdAt='").append(timeCreated).append('\'');
         sb.append(", totalPrice=").append(totalPrice);
         sb.append('}');
         return sb.toString();

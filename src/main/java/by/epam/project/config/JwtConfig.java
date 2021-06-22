@@ -1,12 +1,12 @@
-package by.epam.project.demo.jwt;
+package by.epam.project.config;
 
 import com.google.common.net.HttpHeaders;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-@ConfigurationProperties(prefix = "application.jwt")
 @Component
+@ConfigurationProperties(prefix = "application.jwt")
 public class JwtConfig {
 
     private String secretKey;

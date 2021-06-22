@@ -1,11 +1,30 @@
 package by.epam.project.model.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * The type Category.
  */
+@Entity
+@Table(name = "categories")
 public class Category {
+    @Id
     private long id;
+
     private String name;
+
+    @OneToMany
+    private Set<Product> products = new HashSet<>();
+
 
     /**
      * Instantiates a new Category.
@@ -68,6 +87,24 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void addProducts(Product ...products) {
+        this.products.addAll(Arrays.asList(products));
+    }
+
+    public void subtractProducts(Product ...products) {
+        this.products.removeAll(Arrays.asList(products));
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

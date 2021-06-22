@@ -403,7 +403,7 @@ public class UserDaoImpl implements UserDao {
 
                 statementInsertOrder.setString(1, order.getComment());
                 statementInsertOrder.setString(2, order.getAddress());
-                statementInsertOrder.setLong(3, order.getDateCreatedAt().getTime());
+                statementInsertOrder.setLong(3, order.getTimeCreated().getTime());
                 statementInsertOrder.setBigDecimal(4, order.getTotalPrice());
                 statementInsertOrder.setLong(5, user.getId());
                 statementInsertOrder.setLong(6, order.getStatus().ordinal() + CALCULUS_FROM_ONE);

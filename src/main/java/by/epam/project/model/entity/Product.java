@@ -1,10 +1,22 @@
 package by.epam.project.model.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 /**
  * The type Product.
  */
+@Entity
+@Table(name = "products")
 public class Product {
     /**
      * The enum Status.
@@ -24,12 +36,24 @@ public class Product {
         BLOCKED
     }
 
+    @Id
     private long id;
+
     private String name;
+
     private String info;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
+
     private BigDecimal price;
+
+    @Column(name = "image_url")
     private String imageURL;
+
+    @ManyToOne
+    @JoinColumn(name="category_id")
+    private Category category;
 
     /**
      * Instantiates a new Product.
