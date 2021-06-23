@@ -1,6 +1,6 @@
 package by.epam.project.util;
 
-import by.epam.project.model.entity.User;
+import by.epam.project.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -1,7 +1,7 @@
 //package by.epam.project.controller.filter;
 //
 //import by.epam.project.controller.sync.command.CommandType;
-//import by.epam.project.model.entity.User;
+//import by.epam.project.entity.User;
 //import by.epam.project.util.URLUtil;
 //
 //import javax.servlet.Filter;

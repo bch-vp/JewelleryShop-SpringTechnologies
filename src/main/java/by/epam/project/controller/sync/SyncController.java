@@ -3,7 +3,6 @@ package by.epam.project.controller.sync;
 import by.epam.project.controller.sync.command.Command;
 import by.epam.project.controller.sync.command.CommandProvider;
 import by.epam.project.exception.CommandException;
-import by.epam.project.model.connection.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;

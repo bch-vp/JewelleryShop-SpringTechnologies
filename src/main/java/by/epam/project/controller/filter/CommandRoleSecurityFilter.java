@@ -3,7 +3,7 @@
 //import by.epam.project.controller.async.command.CommandType;
 //import by.epam.project.controller.filter.typerole.RolePermission;
 //import by.epam.project.controller.parameter.PagePath;
-//import by.epam.project.model.entity.User;
+//import by.epam.project.entity.User;
 //
 //import javax.servlet.Filter;
 //import javax.servlet.FilterChain;

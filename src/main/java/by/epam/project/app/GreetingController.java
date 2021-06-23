@@ -1,21 +1,17 @@
 package by.epam.project.app;
 
-import by.epam.project.demo.auth.UserRrepository;
-import by.epam.project.model.entity.User;
-import org.checkerframework.checker.nullness.Opt;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import by.epam.project.repository.UserRepository;
+import by.epam.project.entity.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
 public class GreetingController {
-    private final UserRrepository userRrepository;
+    private final UserRepository userRrepository;
 
-    public GreetingController(UserRrepository userRrepository) {
+    public GreetingController(UserRepository userRrepository) {
         this.userRrepository = userRrepository;
     }
 

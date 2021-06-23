@@ -3,7 +3,7 @@ package by.epam.project.controller.async;
 import by.epam.project.controller.async.command.Command;
 import by.epam.project.controller.async.command.CommandProvider;
 import by.epam.project.exception.CommandException;
-import by.epam.project.model.connection.ConnectionPool;
+import by.epam.project.connection.ConnectionPool;
 import by.epam.project.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -4,9 +4,9 @@ import by.epam.project.controller.sync.Router;
 import by.epam.project.controller.sync.command.Command;
 import by.epam.project.exception.CommandException;
 import by.epam.project.exception.ServiceException;
-import by.epam.project.model.entity.User;
-import by.epam.project.model.service.UserService;
-import by.epam.project.model.service.impl.UserServiceImpl;
+import by.epam.project.entity.User;
+import by.epam.project.service.UserService;
+import by.epam.project.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
