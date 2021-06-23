@@ -48,12 +48,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String login;
 
-    private String password;
-
     @Column(name = "first_name")
-
     private String firstName;
 
     @Column(name = "last_name")
@@ -64,11 +62,9 @@ public class User {
 
     private String email;
 
-    @Column(name = "role_id")
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "status_id")
     @Enumerated(EnumType.STRING)
     private Status status;
 

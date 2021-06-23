@@ -9,6 +9,7 @@ import by.epam.project.entity.User;
 import by.epam.project.service.ProductService;
 import by.epam.project.service.impl.ProductServiceImpl;
 import by.epam.project.util.JsonUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +42,10 @@ public class LoadAllProductsByCategoryCommand implements Command {
         List<Product> shoppingCart = (ArrayList<Product>) session.getAttribute(SHOPPING_CART);
 
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
-            String categoryName = requestParameters.get(NAME);
+            InputStream i = request.getInputStream();
+            String a = IOUtils.toString(i, String.valueOf(StandardCharsets.UTF_8));
+            Map<String, Object> requestParameters = JsonUtil.toMap(i);
+            String categoryName = (String) requestParameters.get(NAME);
 
             User user = (User) session.getAttribute(USER);
             User.Role userRole = User.Role.GUEST;

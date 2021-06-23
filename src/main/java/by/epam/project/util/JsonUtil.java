@@ -139,8 +139,8 @@ public class JsonUtil {
      * @return the hash map
      * @throws IOException the io exception
      */
-    public static Map<String, String> toMap(InputStream inputStream) throws IOException {
-        TypeReference<HashMap<String, String>> typeRef = new TypeReference<>(){} ;
+    public static Map<String, Object> toMap(InputStream inputStream) throws IOException {
+        TypeReference<HashMap<String, Object>> typeRef = new TypeReference<>(){} ;
         return objectMapper.readValue(inputStream, typeRef);
     }
 

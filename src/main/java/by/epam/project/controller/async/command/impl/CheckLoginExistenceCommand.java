@@ -29,8 +29,8 @@ public class CheckLoginExistenceCommand implements Command {
         AjaxData ajaxData;
 
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
-            String login = requestParameters.get(LOGIN);
+            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
+            String login = (String) requestParameters.get(LOGIN);
 
             ajaxData = userService.checkLoginExistence(login);
         } catch (ServiceException | IOException exp) {

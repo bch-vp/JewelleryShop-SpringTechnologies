@@ -30,10 +30,10 @@ public class UpdateProductStatusCommand implements Command {
         AjaxData ajaxData;
 
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
+            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String idProductString = requestParameters.get(ID_PRODUCT);
-            String idStatusString = requestParameters.get(ID_STATUS);
+            String idProductString = (String) requestParameters.get(ID_PRODUCT);
+            String idStatusString = (String) requestParameters.get(ID_STATUS);
 
             ajaxData = productService.updateProductStatus(idProductString, idStatusString);
         } catch (ServiceException | IOException exp) {

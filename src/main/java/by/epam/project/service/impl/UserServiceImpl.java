@@ -77,7 +77,7 @@ import static by.epam.project.service.impl.ImageCriterion.*;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
-    private UserRepository userRrepository;
+    private UserRepository userRepository;
 
     private static final UserServiceImpl instance = new UserServiceImpl();
     private final UserDao userDao = UserDaoImpl.getInstance();
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Optional<User> userOptional= userRrepository.findByLogin(login);
+        Optional<User> userOptional= userRepository.findByLogin(login);
         if (userOptional.isEmpty()) {
             throw new UsernameNotFoundException("Unknown user by login: " + login);
         }
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String role = user.getRole().name();
         String[] authorities = ApplicationUserRole.valueOf(role).getPermissions().toArray(String[]::new);
 
-        String password = userRrepository.findPasswordByLogin(login).get();
+        String password = userRepository.findPasswordByLogin(login).get();
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                 .username(login)
                 .password(password)

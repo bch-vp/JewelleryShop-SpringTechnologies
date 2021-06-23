@@ -37,12 +37,12 @@ public class CreateProductCommand implements Command {
         String language = (String) session.getAttribute(LANGUAGE);
 
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
+            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String idCategoryString = requestParameters.get(ID_CATEGORY);
-            String name = requestParameters.get(NAME);
-            String info = requestParameters.get(INFO);
-            String priceString = requestParameters.get(PRICE);
+            String idCategoryString = (String) requestParameters.get(ID_CATEGORY);
+            String name = (String) requestParameters.get(NAME);
+            String info = (String) requestParameters.get(INFO);
+            String priceString = (String) requestParameters.get(PRICE);
 
             ajaxData = productService.createProduct(idCategoryString, name, info, priceString, language);
         } catch (ServiceException | IOException exp) {

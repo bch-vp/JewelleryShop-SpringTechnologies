@@ -48,8 +48,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        UsernamePasswordAuthenticationFilter a;
-//        UsernamePasswordAuthenticationToken
         String[] adminUrls = ApplicationUserRole.ADMIN.getPermissions().toArray(String[]::new);
         String[] clientUrls = ApplicationUserRole.CLIENT.getPermissions().toArray(String[]::new);
         String[] guestUrls = ApplicationUserRole.GUEST.getPermissions().toArray(String[]::new);

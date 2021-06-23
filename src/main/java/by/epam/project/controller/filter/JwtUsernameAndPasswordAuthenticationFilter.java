@@ -38,7 +38,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
+            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     requestParameters.get("login"),

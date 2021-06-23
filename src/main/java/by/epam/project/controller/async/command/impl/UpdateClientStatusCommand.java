@@ -30,10 +30,10 @@ public class UpdateClientStatusCommand implements Command {
         AjaxData ajaxData;
 
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
+            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String idUserString = requestParameters.get(ID_USER);
-            String idStatusString = requestParameters.get(ID_STATUS);
+            String idUserString = (String) requestParameters.get(ID_USER);
+            String idStatusString = (String) requestParameters.get(ID_STATUS);
 
             ajaxData = userService.updateClientStatus(idUserString, idStatusString);
         } catch (ServiceException | IOException exp) {

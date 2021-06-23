@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,23 +24,22 @@ import static by.epam.project.controller.parameter.Parameter.IS_DEV_MODE;
  * The type Controller.
  */
 @Controller
+@RequestMapping("/do")
 public class SyncController {
     private static final Logger logger = LogManager.getLogger();
 
-    @PostMapping("/do")
+    @PostMapping
     protected String doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         return processRequest(request, response);
     }
 
-    @GetMapping("/do")
-    protected String doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    @GetMapping
+    protected String doGet(HttpServletRequest request, HttpServletResponse response) {
         return processRequest(request, response);
     }
 
-    private String processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    private String processRequest(HttpServletRequest request, HttpServletResponse response) {
         boolean isDevMode = Boolean.parseBoolean(System.getenv(IS_DEV_MODE));
 
         HttpSession session = request.getSession();

@@ -3,6 +3,8 @@ package by.epam.project.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The type Order.
@@ -40,6 +42,9 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @ManyToMany
+    private Set<Product> products = new HashSet<>();
 
     public Order() {
 
@@ -249,6 +254,14 @@ public class Order {
      */
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
     @Override

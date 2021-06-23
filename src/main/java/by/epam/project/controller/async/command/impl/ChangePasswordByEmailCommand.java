@@ -40,12 +40,12 @@ public class ChangePasswordByEmailCommand implements Command {
         String timeCreated = (String) session.getAttribute(TIME_CREATED);
 
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
+            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String login = requestParameters.get(LOGIN);
-            String email = requestParameters.get(EMAIL);
-            String newPassword = requestParameters.get(NEW_PASSWORD);
-            String requestUniqueKey = requestParameters.get(UNIQUE_KEY);
+            String login = (String) requestParameters.get(LOGIN);
+            String email = (String) requestParameters.get(EMAIL);
+            String newPassword = (String) requestParameters.get(NEW_PASSWORD);
+            String requestUniqueKey = (String) requestParameters.get(UNIQUE_KEY);
 
             ajaxData = userService.changePasswordByEmail(login, newPassword, email, sessionUniqueKey, requestUniqueKey,
                     timeCreated, language);

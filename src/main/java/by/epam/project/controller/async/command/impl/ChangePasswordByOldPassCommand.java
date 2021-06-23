@@ -38,10 +38,10 @@ public class ChangePasswordByOldPassCommand implements Command {
         String language = (String) session.getAttribute(LANGUAGE);
 
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
+            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String oldPassword = requestParameters.get(OLD_PASSWORD);
-            String newPassword = requestParameters.get(NEW_PASSWORD);
+            String oldPassword = (String) requestParameters.get(OLD_PASSWORD);
+            String newPassword = (String) requestParameters.get(NEW_PASSWORD);
 
             ajaxData = userService.changePasswordByOldPassword(user, oldPassword, newPassword, language);
         } catch (ServiceException | IOException exp) {

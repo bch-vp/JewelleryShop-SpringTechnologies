@@ -41,10 +41,10 @@ public class CreateOrderCommand implements Command {
         List<Product> shoppingCart = (ArrayList<Product>) session.getAttribute(SHOPPING_CART);
 
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
+            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String OrderComment = requestParameters.get(COMMENT);
-            String OrderAddress = requestParameters.get(ADDRESS);
+            String OrderComment = (String) requestParameters.get(COMMENT);
+            String OrderAddress = (String) requestParameters.get(ADDRESS);
 
             ajaxData = userService.createOrder(user, shoppingCart, OrderAddress, OrderComment);
         } catch (ServiceException | IOException exp) {

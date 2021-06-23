@@ -40,14 +40,14 @@ public class SignUpCommand implements Command {
         String language = (String) session.getAttribute(LANGUAGE);
 
         try {
-            Map<String, String> requestParameters = JsonUtil.toMap(request.getInputStream());
+            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String login = requestParameters.get(LOGIN);
-            String password = requestParameters.get(PASSWORD);
-            String firstName = requestParameters.get(FIRST_NAME);
-            String lastName = requestParameters.get(LAST_NAME);
-            String telephoneNumber = requestParameters.get(TELEPHONE_NUMBER);
-            String email = requestParameters.get(EMAIL);
+            String login = (String) requestParameters.get(LOGIN);
+            String password = (String) requestParameters.get(PASSWORD);
+            String firstName = (String) requestParameters.get(FIRST_NAME);
+            String lastName = (String) requestParameters.get(LAST_NAME);
+            String telephoneNumber = (String) requestParameters.get(TELEPHONE_NUMBER);
+            String email = (String) requestParameters.get(EMAIL);
 
             String URL = request.getRequestURL().toString();
             String URI = request.getRequestURI();
