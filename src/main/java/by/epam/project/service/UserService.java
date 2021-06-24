@@ -6,6 +6,7 @@ import by.epam.project.entity.Product;
 import by.epam.project.entity.User;
 import org.apache.commons.fileupload.FileItem;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public interface UserService {
      * @return the ajax data
      * @throws ServiceException the service exception
      */
-    AjaxData uploadUserImage(String userLogin, List<FileItem> fileItems, String language) throws ServiceException;
+    AjaxData uploadUserImage(String userLogin, List<FileItem> fileItems, String language) throws ServiceException, IOException;
 
     /**
      * Update profile ajax data.
@@ -38,17 +39,6 @@ public interface UserService {
      */
     AjaxData updateProfile(User user, String newLogin, String newFirstName, String newLastName,
                            String newTelephoneNumber, String newEmail, String language) throws ServiceException;
-
-    /**
-     * Sign in ajax data.
-     *
-     * @param login    the login
-     * @param password the password
-     * @param language the language
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData signIn(String login, String password, String language) throws ServiceException;
 
     /**
      * Sign up ajax data.
@@ -78,7 +68,7 @@ public interface UserService {
      * @throws ServiceException the service exception
      */
     AjaxData changePasswordByOldPassword(User user, String oldPassword, String newPassword,
-                                         String language) throws ServiceException;
+                                         String language) throws ServiceException, IOException;
 
     /**
      * Change password by email ajax data.
@@ -94,7 +84,7 @@ public interface UserService {
      * @throws ServiceException the service exception
      */
     AjaxData changePasswordByEmail(String login, String newPassword, String email, String sessionUniqueKey,
-                                   String requestUniqueKey, String timeCreated, String language) throws ServiceException;
+                                   String requestUniqueKey, String timeCreated, String language) throws ServiceException, IOException;
 
     /**
      * Find user image ajax data.
@@ -103,7 +93,7 @@ public interface UserService {
      * @return the ajax data
      * @throws ServiceException the service exception
      */
-    AjaxData findUserImage(String login) throws ServiceException;
+    AjaxData findUserImage(String login) throws ServiceException, IOException;
 
     /**
      * Remove user image ajax data.
@@ -112,29 +102,7 @@ public interface UserService {
      * @return the ajax data
      * @throws ServiceException the service exception
      */
-    AjaxData removeUserImage(String login) throws ServiceException;
-
-    /**
-     * Create order ajax data.
-     *
-     * @param user         the user
-     * @param shoppingCart the shopping cart
-     * @param orderAddress the order address
-     * @param orderComment the order comment
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData createOrder(User user, List<Product> shoppingCart, String orderAddress,
-                         String orderComment) throws ServiceException;
-
-    /**
-     * Find all orders ajax data.
-     *
-     * @param user the user
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData findAllOrders(User user) throws ServiceException;
+    AjaxData removeUserImage(String login) throws ServiceException, IOException;
 
     /**
      * Find all clients ajax data.
@@ -142,7 +110,7 @@ public interface UserService {
      * @return the ajax data
      * @throws ServiceException the service exception
      */
-    AjaxData findAllClients() throws ServiceException;
+    AjaxData findAllClients() throws ServiceException, IOException;
 
     /**
      * Check login existence ajax data.
@@ -162,16 +130,6 @@ public interface UserService {
      * @throws ServiceException the service exception
      */
     AjaxData updateClientStatus(String idUserString, String idStatusString) throws ServiceException;
-
-    /**
-     * Update order status ajax data.
-     *
-     * @param idOrderString  the id order string
-     * @param idStatusString the id status string
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData updateOrderStatus(String idOrderString, String idStatusString) throws ServiceException;
 
     /**
      * Update activation status by login boolean.
