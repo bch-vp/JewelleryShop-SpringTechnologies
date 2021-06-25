@@ -285,7 +285,7 @@ public class ProductDaoImpl implements ProductDao {
             BigDecimal price = resultSet.getBigDecimal(PRICE);
             String imageURL = resultSet.getString(IMAGE_URL);
 
-            Product product = new Product(id, name, info, status, price, imageURL);
+            Product product = null;
             return product;
         } catch (SQLException exp) {
             throw new DaoException("Error while creating product from resultSet", exp);

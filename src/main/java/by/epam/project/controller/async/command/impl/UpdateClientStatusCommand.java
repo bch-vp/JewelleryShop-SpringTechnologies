@@ -5,10 +5,10 @@ import by.epam.project.controller.async.command.Command;
 import by.epam.project.exception.CommandException;
 import by.epam.project.exception.ServiceException;
 import by.epam.project.service.UserService;
-import by.epam.project.service.impl.UserServiceImpl;
 import by.epam.project.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +23,8 @@ import static by.epam.project.controller.parameter.Parameter.ID_USER;
  */
 public class UpdateClientStatusCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private final UserService userService = UserServiceImpl.getInstance();
+    @Autowired
+    private UserService userService;
 
     @Override
     public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {

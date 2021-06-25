@@ -1,11 +1,11 @@
 package by.epam.project.service.impl;
 
 import by.epam.project.controller.async.AjaxData;
-import by.epam.project.exception.DaoException;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.dao.CategoryDao;
 import by.epam.project.dao.impl.CategoryDaoImpl;
 import by.epam.project.entity.Category;
+import by.epam.project.exception.DaoException;
+import by.epam.project.exception.ServiceException;
 import by.epam.project.service.CategoryService;
 import by.epam.project.util.JsonUtil;
 import by.epam.project.validator.ServiceValidator;
@@ -26,7 +26,8 @@ import static by.epam.project.controller.parameter.Parameter.OTHERS;
 public class CategoryServiceImpl implements CategoryService {
     private static final CategoryServiceImpl instance = new CategoryServiceImpl();
 
-    private CategoryServiceImpl(){}
+    private CategoryServiceImpl() {
+    }
 
     private final CategoryDao categoryDao = CategoryDaoImpl.getInstance();
 
@@ -56,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
                 return ajaxData;
             }
 
-            Category category = new Category(nameCategory);
+            Category category = null;
             category = categoryDao.add(category);
             String json = JsonUtil.toJson(category);
             ajaxData.setJson(json);

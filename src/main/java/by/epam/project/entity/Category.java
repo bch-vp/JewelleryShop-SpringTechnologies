@@ -13,7 +13,7 @@ import java.util.Set;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -27,24 +27,10 @@ public class Category {
     public Category() {
     }
 
-    /**
-     * Instantiates a new Category.
-     *
-     * @param id   the id
-     * @param name the name
-     */
-    public Category(long id, String name) {
+    public Category(Long id, String name, Set<Product> products) {
         this.id = id;
         this.name = name;
-    }
-
-    /**
-     * Instantiates a new Category.
-     *
-     * @param name the name
-     */
-    public Category(String name) {
-        this.name = name;
+        this.products = products;
     }
 
     /**
@@ -52,17 +38,8 @@ public class Category {
      *
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    /**
-     * Sets id.
-     *
-     * @param id the id
-     */
-    public void setId(long id) {
-        this.id = id;
     }
 
     /**

@@ -1,27 +1,33 @@
 package by.epam.project.service.imprepo;
 
+import by.epam.project.builder.OrderBuilder;
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.entity.Order;
 import by.epam.project.entity.Product;
+import by.epam.project.entity.User;
+import by.epam.project.repository.OrderRepository;
+import by.epam.project.repository.UserRepository;
 import by.epam.project.service.OrderService;
 import by.epam.project.validator.ServiceValidator;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
-public class OrderServiceImpl implements OrderService{
+@Service
+public class OrderServiceImpl implements OrderService {
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
 
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository) {
+        this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
-    public AjaxData createOrder(User user, List<Product> shoppingCart, String orderAddress,
+    public AjaxData createOrder(User user, Set<Product> shoppingCart, String orderAddress,
                                 String orderComment) {
         AjaxData ajaxData = new AjaxData();
 
@@ -35,70 +41,75 @@ public class OrderServiceImpl implements OrderService{
         BigDecimal totalPrice = shoppingCart.stream()
                 .map(Product::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        Order order = new Order(orderComment, orderAddress, new Date(new Date().getTime()), totalPrice, Order.Status.NOT_CONFIRMED);
-        try {
-            userDao.createOrder(user, order, shoppingCart);
-            shoppingCart.clear();
-        } catch (DaoException exp) {
-            throw new ServiceException(exp);
-        }
+
+        Order order = OrderBuilder.builder()
+                .setUser(user)
+                .setComment(orderComment)
+                .setAddress(orderAddress)
+                .setTimeCreated(new Date(new Date().getTime()))
+                .setTotalPrice(totalPrice)
+                .setStatus(Order.Status.NOT_CONFIRMED)
+                .build();
+
+        orderRepository.save(order);
+        shoppingCart.clear();
 
         return ajaxData;
     }
 
-    @Override
+    @Override//todo need test
     public AjaxData findAllOrders(User user) {
         AjaxData ajaxData = new AjaxData();
 
-        String json;
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            if (user.getRole() == User.Role.CLIENT) {
-                List<Order> orders = userDao.findAllOrdersToClient(user);
-
-                ArrayNode arrayNodeOrders = objectMapper.valueToTree(orders);
-                int size = orders.size();
-                for (int i = 0; i < size; i++) {
-                    JsonNode orderNode = arrayNodeOrders.path(i);
-
-                    List<Product> products = productDao.findAllOrderProducts(orders.get(i));
-                    ArrayNode arrayNodeProducts = objectMapper.valueToTree(products);
-
-                    ((ObjectNode) orderNode).putArray(PRODUCTS).addAll(arrayNodeProducts);
-                }
-                json = arrayNodeOrders.toString();
-            } else {
-                List<Order> orders = userDao.findAllOrdersToAdmin();
-
-                ArrayNode arrayNodeOrders = objectMapper.valueToTree(orders);
-                int size = orders.size();
-                for (int i = 0; i < size; i++) {
-                    JsonNode orderNode = arrayNodeOrders.path(i);
-
-                    Optional<User> userOrderOptional = userDao.findUserByOrderId(orders.get(i).getId());
-                    User userOrder = userOrderOptional.get();
-
-                    ((ObjectNode) orderNode).put(LOGIN, userOrder.getLogin());
-                    ((ObjectNode) orderNode).put(TELEPHONE_NUMBER, userOrder.getTelephoneNumber());
-                    ((ObjectNode) orderNode).put(EMAIL, userOrder.getEmail());
-
-                    List<Product> products = productDao.findAllOrderProducts(orders.get(i));
-                    ArrayNode arrayNodeProducts = objectMapper.valueToTree(products);
-
-                    ((ObjectNode) orderNode).putArray(PRODUCTS).addAll(arrayNodeProducts);
-                }
-                json = arrayNodeOrders.toString();
-            }
-            ajaxData.setJson(json);
-        } catch (DaoException exp) {
-            throw new ServiceException(exp);
-        }
+//        String json;
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            if (user.getRole() == User.Role.CLIENT) {
+//                List<Order> orders = orderRepository.findAllOrdersByUserId(user.getId());
+//
+//                ArrayNode arrayNodeOrders = objectMapper.valueToTree(orders);
+//                int size = orders.size();
+//                for (int i = 0; i < size; i++) {
+//                    JsonNode orderNode = arrayNodeOrders.path(i);
+//
+//                    List<Product> products = productDao.findAllOrderProducts(orders.get(i));
+//                    ArrayNode arrayNodeProducts = objectMapper.valueToTree(products);
+//
+//                    ((ObjectNode) orderNode).putArray(PRODUCTS).addAll(arrayNodeProducts);
+//                }
+//                json = arrayNodeOrders.toString();
+//            } else {
+//                List<Order> orders = orderRepository.findAllOrdersToAdmin();
+//
+//                ArrayNode arrayNodeOrders = objectMapper.valueToTree(orders);
+//                int size = orders.size();
+//                for (int i = 0; i < size; i++) {
+//                    JsonNode orderNode = arrayNodeOrders.path(i);
+//
+//                    Optional<User> userOrderOptional = userDao.findUserByOrderId(orders.get(i).getId());
+//                    User userOrder = userOrderOptional.get();
+//
+//                    ((ObjectNode) orderNode).put(LOGIN, userOrder.getLogin());
+//                    ((ObjectNode) orderNode).put(TELEPHONE_NUMBER, userOrder.getTelephoneNumber());
+//                    ((ObjectNode) orderNode).put(EMAIL, userOrder.getEmail());
+//
+//                    List<Product> products = productDao.findAllOrderProducts(orders.get(i));
+//                    ArrayNode arrayNodeProducts = objectMapper.valueToTree(products);
+//
+//                    ((ObjectNode) orderNode).putArray(PRODUCTS).addAll(arrayNodeProducts);
+//                }
+//                json = arrayNodeOrders.toString();
+//            }
+//            ajaxData.setJson(json);
+//        } catch (DaoException exp) {
+//            throw new ServiceException(exp);
+//        }
 
         return ajaxData;
     }
 
     @Override
-    public AjaxData updateOrderStatus(String idOrderString, String idStatusString) {
+    public AjaxData updateStatusById(String idOrderString, String idStatusString) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isIdCorrect(idOrderString)
@@ -118,7 +129,7 @@ public class OrderServiceImpl implements OrderService{
             return ajaxData;
         }
 
-        boolean isUpdated = userDao.updateOrderStatusById(idOrder, idStatus);
+        boolean isUpdated = orderRepository.updateOrderStatusById(status, idOrder);
         if (!isUpdated) {
             ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
         }

@@ -2,10 +2,10 @@ package by.epam.project.controller.async.command.impl;
 
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
-import by.epam.project.exception.CommandException;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.entity.Product;
 import by.epam.project.entity.User;
+import by.epam.project.exception.CommandException;
+import by.epam.project.exception.ServiceException;
 import by.epam.project.service.ProductService;
 import by.epam.project.service.impl.ProductServiceImpl;
 import by.epam.project.util.JsonUtil;
@@ -22,7 +22,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import static by.epam.project.controller.parameter.Parameter.NAME;
 import static by.epam.project.controller.parameter.Parameter.SHOPPING_CART;
 import static by.epam.project.controller.parameter.Parameter.USER;

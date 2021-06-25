@@ -29,7 +29,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -53,100 +53,15 @@ public class Product {
     public Product() {
     }
 
-    /**
-     * Instantiates a new Product.
-     *
-     * @param id     the id
-     * @param name   the name
-     * @param info   the info
-     * @param status the status
-     * @param price  the price
-     */
-    public Product(long id, String name, String info, Status status, BigDecimal price) {
-        this.id = id;
-        this.name = name;
-        this.info = info;
-        this.status = status;
-        this.price = price;
-    }
-
-    /**
-     * Instantiates a new Product.
-     *
-     * @param id       the id
-     * @param name     the name
-     * @param info     the info
-     * @param status   the status
-     * @param price    the price
-     * @param imageURL the image url
-     */
-    public Product(long id, String name, String info, Status status, BigDecimal price, String imageURL) {
+    public Product(Long id, String name, String info, Status status, BigDecimal price, String imageURL,
+                   Category category) {
         this.id = id;
         this.name = name;
         this.info = info;
         this.status = status;
         this.price = price;
         this.imageURL = imageURL;
-    }
-
-    /**
-     * Instantiates a new Product.
-     *
-     * @param name     the name
-     * @param info     the info
-     * @param status   the status
-     * @param price    the price
-     * @param imageURL the image url
-     */
-    public Product(String name, String info, Status status, BigDecimal price, String imageURL) {
-        this.name = name;
-        this.info = info;
-        this.status = status;
-        this.price = price;
-        this.imageURL = imageURL;
-    }
-
-    /**
-     * Instantiates a new Product.
-     *
-     * @param name   the name
-     * @param info   the info
-     * @param status the status
-     * @param price  the price
-     */
-    public Product(String name, String info, Status status, BigDecimal price) {
-        this.name = name;
-        this.info = info;
-        this.status = status;
-        this.price = price;
-    }
-
-    /**
-     * Instantiates a new Product.
-     *
-     * @param id    the id
-     * @param name  the name
-     * @param info  the info
-     * @param price the price
-     */
-    public Product(long id, String name, String info, BigDecimal price) {
-        this.id = id;
-        this.name = name;
-        this.info = info;
-        this.price = price;
-    }
-
-    /**
-     * Instantiates a new Product.
-     *
-     * @param name  the name
-     * @param info  the info
-     * @param price the price
-     */
-    public Product(String name, String info, BigDecimal price) {
-        this.name = name;
-        this.info = info;
-        this.price = price;
+        this.category = category;
     }
 
     /**
@@ -154,17 +69,8 @@ public class Product {
      *
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    /**
-     * Sets id.
-     *
-     * @param id the id
-     */
-    public void setId(long id) {
-        this.id = id;
     }
 
     /**

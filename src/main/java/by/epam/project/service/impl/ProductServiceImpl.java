@@ -1,8 +1,6 @@
 package by.epam.project.service.impl;
 
 import by.epam.project.controller.async.AjaxData;
-import by.epam.project.exception.DaoException;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.dao.CategoryDao;
 import by.epam.project.dao.ProductDao;
 import by.epam.project.dao.impl.CategoryDaoImpl;
@@ -10,6 +8,8 @@ import by.epam.project.dao.impl.ProductDaoImpl;
 import by.epam.project.entity.Category;
 import by.epam.project.entity.Product;
 import by.epam.project.entity.User;
+import by.epam.project.exception.DaoException;
+import by.epam.project.exception.ServiceException;
 import by.epam.project.service.ProductService;
 import by.epam.project.util.ImageUtil;
 import by.epam.project.util.JsonUtil;
@@ -32,7 +32,10 @@ import static by.epam.project.controller.parameter.ContentKey.ERROR_PROFILE_AVAT
 import static by.epam.project.controller.parameter.ErrorKey.ERROR;
 import static by.epam.project.controller.parameter.Parameter.DATA;
 import static by.epam.project.controller.parameter.Parameter.URL;
-import static by.epam.project.service.impl.ImageCriterion.*;
+import static by.epam.project.service.impl.ImageCriterion.FILES_COUNT;
+import static by.epam.project.service.impl.ImageCriterion.FILE_MAX_SIZE;
+import static by.epam.project.service.impl.ImageCriterion.FILE_TYPE;
+import static by.epam.project.service.impl.ImageCriterion.FIRST;
 
 
 /**
@@ -136,13 +139,13 @@ public class ProductServiceImpl implements ProductService {
         BigDecimal price = new BigDecimal(priceString);
         try {
             Optional<Product> productOptional = productDao.findProductByName(name);
-            if(productOptional.isPresent()
-                    && productOptional.get().getId()!=id){
+            if (productOptional.isPresent()
+                    && productOptional.get().getId() != id) {
                 ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
                 return ajaxData;
             }
 
-            Product product = new Product(id, name, info, price);
+            Product product = null;
             boolean isUpdated = productDao.updateProductInfo(product);
             if (!isUpdated) {
                 ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
@@ -339,7 +342,7 @@ public class ProductServiceImpl implements ProductService {
             long idCategory = Long.parseLong(idCategoryString);
             BigDecimal price = new BigDecimal(priceString);
 
-            Product product = new Product(name, info, Product.Status.ACTIVE, price);
+            Product product =null;
             productDao.add(product, idCategory);
         } catch (DaoException | IOException exp) {
             throw new ServiceException(exp);

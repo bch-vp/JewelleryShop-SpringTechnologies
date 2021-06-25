@@ -52,7 +52,7 @@ public class CategoryDaoImpl implements CategoryDao {
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
             long generatedId = resultSet.getLong(1);
-            category.setId(generatedId);
+//            category.setId(generatedId);
         } catch (SQLException exp) {
             logger.error(exp);
             throw new DaoException(exp);
@@ -172,7 +172,7 @@ public class CategoryDaoImpl implements CategoryDao {
             long id = resultSet.getLong(ID);
             String name = resultSet.getString(NAME);
 
-            Category category = new Category(id, name);
+            Category category = null;
             return category;
         } catch (SQLException exp) {
             throw new DaoException("Error while creating category from resultSet", exp);

@@ -1,10 +1,11 @@
 package by.epam.project.security;
 
-import by.epam.project.controller.filter.typerole.RolePermission;
 import by.epam.project.config.JwtConfig;
 import by.epam.project.controller.filter.JwtTokenVerifier;
 import by.epam.project.controller.filter.JwtUsernameAndPasswordAuthenticationFilter;
-import by.epam.project.service.impl.UserServiceImpl;
+import by.epam.project.controller.filter.typerole.RolePermission;
+import by.epam.project.service.UserService;
+import by.epam.project.service.imprepo.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,15 +56,15 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
-                .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig),JwtUsernameAndPasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/",
-                                        "index",
-                                        "/css/*",
-                                        "/js/**").permitAll()
+                        "index",
+                        "/css/*",
+                        "/js/**").permitAll()
                 .regexMatchers(guestUrls).permitAll()
                 .regexMatchers(adminUrls).hasRole(RolePermission.ADMIN.name())
                 .regexMatchers(clientUrls).hasRole(RolePermission.CLIENT.name())

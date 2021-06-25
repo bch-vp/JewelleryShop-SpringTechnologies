@@ -28,7 +28,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String comment;
 
@@ -43,6 +43,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @OneToOne
+    private User user;
+
     @ManyToMany
     private Set<Product> products = new HashSet<>();
 
@@ -50,102 +53,16 @@ public class Order {
 
     }
 
-    /**
-     * Instantiates a new Order.
-     *
-     * @param id            the id
-     * @param comment       the comment
-     * @param address       the address
-     * @param dateCreatedAt the date created at
-     * @param totalPrice    the total price
-     * @param status        the status
-     */
-    public Order(long id, String comment, String address, Date dateCreatedAt, BigDecimal totalPrice, Status status) {
+    public Order(Long id, String comment, String address, Date timeCreated, BigDecimal totalPrice, Status status, User user,
+                 Set<Product> products) {
         this.id = id;
         this.comment = comment;
         this.address = address;
-        this.timeCreated = dateCreatedAt;
+        this.timeCreated = timeCreated;
         this.totalPrice = totalPrice;
         this.status = status;
-    }
-
-    /**
-     * Instantiates a new Order.
-     *
-     * @param id         the id
-     * @param comment    the comment
-     * @param address    the address
-     * @param createdAt  the created at
-     * @param totalPrice the total price
-     */
-    public Order(long id, String comment, String address, Date createdAt, BigDecimal totalPrice) {
-        this.id = id;
-        this.comment = comment;
-        this.address = address;
-        this.timeCreated = createdAt;
-        this.totalPrice = totalPrice;
-        this.status = Status.NOT_CONFIRMED;
-    }
-
-    /**
-     * Instantiates a new Order.
-     *
-     * @param comment    the comment
-     * @param address    the address
-     * @param createdAt  the created at
-     * @param totalPrice the total price
-     */
-    public Order(String comment, String address, Date createdAt, BigDecimal totalPrice) {
-        this.comment = comment;
-        this.address = address;
-        this.timeCreated = createdAt;
-        this.totalPrice = totalPrice;
-        this.status = Status.NOT_CONFIRMED;
-    }
-
-    /**
-     * Instantiates a new Order.
-     *
-     * @param comment    the comment
-     * @param address    the address
-     * @param createdAt  the created at
-     * @param totalPrice the total price
-     * @param status     the status
-     */
-    public Order(String comment, String address, Date createdAt, BigDecimal totalPrice, Status status) {
-        this.comment = comment;
-        this.address = address;
-        this.timeCreated = createdAt;
-        this.totalPrice = totalPrice;
-        this.status = status;
-    }
-
-    /**
-     * Instantiates a new Order.
-     *
-     * @param comment   the comment
-     * @param address   the address
-     * @param createdAt the created at
-     */
-    public Order(String comment, String address, Date createdAt) {
-        this.comment = comment;
-        this.address = address;
-        this.timeCreated = createdAt;
-    }
-
-    /**
-     * Instantiates a new Order.
-     *
-     * @param comment   the comment
-     * @param address   the address
-     * @param createdAt the created at
-     * @param status    the status
-     */
-    public Order(String comment, String address, Date createdAt, Status status) {
-        this.comment = comment;
-        this.address = address;
-        this.timeCreated = createdAt;
-        this.status = status;
+        this.user = user;
+        this.products = products;
     }
 
     /**
@@ -153,17 +70,8 @@ public class Order {
      *
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    /**
-     * Sets id.
-     *
-     * @param id the id
-     */
-    public void setId(long id) {
-        this.id = id;
     }
 
     /**

@@ -1,13 +1,11 @@
 package by.epam.project.service.imprepo;
 
+import by.epam.project.builder.UserBuilder;
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.parameter.ContentKey;
 import by.epam.project.controller.parameter.ErrorKey;
 import by.epam.project.controller.sync.command.CommandType;
-import by.epam.project.dao.ProductDao;
-import by.epam.project.dao.impl.ProductDaoImpl;
 import by.epam.project.entity.User;
-import by.epam.project.exception.DaoException;
 import by.epam.project.exception.ServiceException;
 import by.epam.project.repository.UserRepository;
 import by.epam.project.security.ApplicationUserRole;
@@ -61,31 +59,20 @@ import static by.epam.project.service.imprepo.ImageCriterion.FIRST;
  */
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-    private static final UserServiceImpl instance = new UserServiceImpl();
-    //    private final UserDao userDao = UserDaoImpl.getInstance();
-    private final ProductDao productDao = ProductDaoImpl.getInstance();
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     private static final int MAX_TIMER_SEC = 300;
     private static final int MILLISECONDS_PER_SECOND = 1000;
 
     private UserServiceImpl() {
     }
-
-    /**
-     * Gets instance.
-     *
-     * @return the instance
-     */
-    public static UserServiceImpl getInstance() {
-        return instance;
-    }
-
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
@@ -195,8 +182,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return ajaxData;
         }
 
-        User newUser = new User(user.getId(), newLogin, newFirstName, newLastName, newTelephoneNumber,
-                newEmail, user.getRole(), user.getStatus());
+        User newUser = UserBuilder.builder()
+                .setId(user.getId())
+                .setLogin(newLogin)
+                .setFirstName(newFirstName)
+                .setLastName(newLastName)
+                .setTelephoneNumber(newTelephoneNumber)
+                .setEmail(newEmail)
+                .setRole(user.getRole())
+                .setStatus(user.getStatus())
+                .build();
+
         userRepository.save(newUser);
 
         return ajaxData;
@@ -238,8 +234,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return ajaxData;
         }
 
-        User user = new User(login, firstName, lastName, telephoneNumber, email,
-                User.Role.CLIENT, User.Status.NOT_ACTIVATED);
+        User user = UserBuilder.builder()
+                .setLogin(login)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setTelephoneNumber(telephoneNumber)
+                .setEmail(email)
+                .setRole(User.Role.CLIENT)
+                .setStatus(User.Status.NOT_ACTIVATED)
+                .build();
+
         String encryptPassword = passwordEncoder.encode(password);
         userRepository.updatePasswordByLogin(encryptPassword, login);
 

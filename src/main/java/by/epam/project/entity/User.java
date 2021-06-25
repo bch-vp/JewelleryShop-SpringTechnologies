@@ -83,88 +83,17 @@ public class User {
     public User() {
     }
 
-    /**
-     * Instantiates a new User.
-     *
-     * @param id              the id
-     * @param login           the login
-     * @param firstName       the first name
-     * @param lastName        the last name
-     * @param telephoneNumber the telephone number
-     * @param email           the email
-     * @param role            the role
-     * @param status          the status
-     */
-    public User(long id, String login, String firstName, String lastName, String telephoneNumber, String email,
-                Role role, Status status) {
+    public User(Long id, String login, String firstName, String lastName, String telephoneNumber, String email,
+                String avatarUrl, Role role, Status status) {
         this.id = id;
         this.login = login;
         this.firstName = firstName;
         this.lastName = lastName;
         this.telephoneNumber = telephoneNumber;
         this.email = email;
+        this.avatarUrl = avatarUrl;
         this.role = role;
         this.status = status;
-    }
-
-    /**
-     * Instantiates a new User.
-     *
-     * @param login   the login
-     * @param name    the name
-     * @param surname the surname
-     * @param phone   the phone
-     * @param email   the email
-     * @param role    the role
-     * @param status  the status
-     */
-    public User(String login, String name, String surname, String phone, String email, Role role, Status status) {
-        this.login = login;
-        this.firstName = name;
-        this.lastName = surname;
-        this.telephoneNumber = phone;
-        this.email = email;
-        this.role = role;
-        this.status = status;
-    }
-
-    /**
-     * Instantiates a new User.
-     *
-     * @param login           the login
-     * @param firstName       the first name
-     * @param lastName        the last name
-     * @param telephoneNumber the telephone number
-     * @param email           the email
-     */
-    public User(String login, String firstName, String lastName, String telephoneNumber, String email) {
-        this.login = login;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.telephoneNumber = telephoneNumber;
-        this.email = email;
-    }
-
-    /**
-     * Instantiates a new User.
-     *
-     * @param login  the login
-     * @param status the status
-     * @param role   the role
-     */
-    public User(String login, Status status, Role role) {
-        this.login = login;
-        this.status = status;
-        this.role = role;
-    }
-
-    /**
-     * Instantiates a new User.
-     *
-     * @param login the login
-     */
-    public User(String login) {
-        this.login = login;
     }
 
     /**
@@ -172,17 +101,8 @@ public class User {
      *
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    /**
-     * Sets id.
-     *
-     * @param id the id
-     */
-    public void setId(long id) {
-        this.id = id;
     }
 
     /**

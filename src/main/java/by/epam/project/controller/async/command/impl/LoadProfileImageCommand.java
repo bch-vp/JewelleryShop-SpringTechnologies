@@ -2,17 +2,18 @@ package by.epam.project.controller.async.command.impl;
 
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
+import by.epam.project.entity.User;
 import by.epam.project.exception.CommandException;
 import by.epam.project.exception.ServiceException;
-import by.epam.project.entity.User;
 import by.epam.project.service.UserService;
-import by.epam.project.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 import static by.epam.project.controller.parameter.Parameter.USER;
 
@@ -21,7 +22,8 @@ import static by.epam.project.controller.parameter.Parameter.USER;
  */
 public class LoadProfileImageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private final UserService userService = UserServiceImpl.getInstance();
+    @Autowired
+    private UserService userService;
 
     @Override
     public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -31,7 +33,7 @@ public class LoadProfileImageCommand implements Command {
         User user = (User) session.getAttribute(USER);
         try {
             ajaxData = userService.findUserImage(user.getLogin());
-        } catch (ServiceException exp) {
+        } catch (ServiceException | IOException exp) {
             logger.error("Error during loading user image");
             throw new CommandException(exp);
         }

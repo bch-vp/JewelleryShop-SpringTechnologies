@@ -2,13 +2,14 @@ package by.epam.project.controller.async.command.impl;
 
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
+import by.epam.project.entity.User;
 import by.epam.project.exception.CommandException;
 import by.epam.project.exception.ServiceException;
-import by.epam.project.entity.User;
+import by.epam.project.service.OrderService;
 import by.epam.project.service.UserService;
-import by.epam.project.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +22,8 @@ import static by.epam.project.controller.parameter.Parameter.USER;
  */
 public class LoadAllOrdersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private final UserService userService = UserServiceImpl.getInstance();
+    @Autowired
+    private OrderService orderService;
 
     @Override
     public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -30,12 +32,7 @@ public class LoadAllOrdersCommand implements Command {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(USER);
 
-        try {
-            ajaxData = userService.findAllOrders(user);
-        } catch (ServiceException exp) {
-            logger.error("Error during loading all orders to user by role");
-            throw new CommandException(exp);
-        }
+        ajaxData = orderService.findAllOrders(user);
 
         return ajaxData;
     }
