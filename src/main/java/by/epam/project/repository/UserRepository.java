@@ -25,7 +25,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "SELECT users.id AS id, login, password, first_name, last_name, telephone_number, email, role, status " +
             "FROM users " +
             "WHERE role != 'ADMIN'", nativeQuery = true)
-    Optional<List<User>> findAllClients();
+    List<User> findAllClients();
 
 
     @Query(value = "UPDATE users SET avatar_url = ? WHERE BINARY login = ?", nativeQuery = true)

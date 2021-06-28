@@ -15,7 +15,7 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
     Optional<List<Order>> findAllOrdersByUserId(long id);
 
     @Query("select o from Order o join fetch o.products")
-    Optional<List<Order>> findAllOrders(long id);
+    List<Order> findAll();
 
 
     @Query(value = "UPDATE orders SET status = ? WHERE BINARY id = ?", nativeQuery = true)

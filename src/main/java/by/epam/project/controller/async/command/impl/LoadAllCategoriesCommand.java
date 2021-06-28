@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 /**
@@ -26,7 +27,7 @@ public class LoadAllCategoriesCommand implements Command {
 
         try {
             ajaxData = categoryService.findAllCategories();
-        } catch (ServiceException exp) {
+        } catch (ServiceException | IOException exp) {
             logger.error("Error during loading all categories");
             throw new CommandException(exp);
         }

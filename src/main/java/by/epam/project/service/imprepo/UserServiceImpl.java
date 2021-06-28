@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -410,7 +409,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public AjaxData findAllClients() throws ServiceException, IOException {
         AjaxData ajaxData = new AjaxData();
 
-        List<User> users = userRepository.findAllClients().get();
+        List<User> users = userRepository.findAllClients();
         String json = JsonUtil.toJson(USERS, users);
         ajaxData.setJson(json);
 
