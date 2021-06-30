@@ -1,15 +1,13 @@
 package by.epam.project.service.impl;
 
+import by.epam.project.builder.ProductBuilder;
 import by.epam.project.controller.async.AjaxData;
-import by.epam.project.dao.CategoryDao;
-import by.epam.project.dao.ProductDao;
-import by.epam.project.dao.impl.CategoryDaoImpl;
-import by.epam.project.dao.impl.ProductDaoImpl;
 import by.epam.project.entity.Category;
 import by.epam.project.entity.Product;
 import by.epam.project.entity.User;
-import by.epam.project.exception.DaoException;
 import by.epam.project.exception.ServiceException;
+import by.epam.project.repository.CategoryRepository;
+import by.epam.project.repository.ProductRepository;
 import by.epam.project.service.ProductService;
 import by.epam.project.util.ImageUtil;
 import by.epam.project.util.JsonUtil;
@@ -17,6 +15,7 @@ import by.epam.project.validator.ServiceValidator;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,31 +36,22 @@ import static by.epam.project.service.impl.ImageCriterion.FILE_MAX_SIZE;
 import static by.epam.project.service.impl.ImageCriterion.FILE_TYPE;
 import static by.epam.project.service.impl.ImageCriterion.FIRST;
 
-
 /**
  * The type Product service.
  */
+@Service
 public class ProductServiceImpl implements ProductService {
-    private static final ProductServiceImpl instance = new ProductServiceImpl();
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    private final ProductDao productDao = ProductDaoImpl.getInstance();
-    private final CategoryDao categoryDao = CategoryDaoImpl.getInstance();
-
-    private ProductServiceImpl() {
-    }
-
-    /**
-     * Gets instance.
-     *
-     * @return the instance
-     */
-    public static ProductServiceImpl getInstance() {
-        return instance;
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public AjaxData findAllProductsByCategory(User.Role userRole, String categoryName,
-                                              List<Product> shoppingCart) throws ServiceException {
+                                              List<Product> shoppingCart) throws ServiceException, IOException {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isNameCorrect(categoryName)) {
@@ -70,24 +60,20 @@ public class ProductServiceImpl implements ProductService {
         }
 
         List<Product> products;
-        try {
-            switch (userRole) {
-                case GUEST, CLIENT -> {
-                    products = productDao.findAllProductsByCategoryToClient(categoryName);
+        switch (userRole) {
+            case GUEST, CLIENT -> {
+                products = productRepository.findAllProductsByCategoryToClient(categoryName);
 
-                    if (shoppingCart != null) {
-                        shoppingCart.forEach(products::remove);
-                    }
-                }
-                default -> {
-                    products = productDao.findAllProductsByCategoryToAdmin(categoryName);
+                if (shoppingCart != null) {
+                    shoppingCart.forEach(products::remove);
                 }
             }
-            String json = JsonUtil.toJson(DATA, products);
-            ajaxData.setJson(json);
-        } catch (DaoException | IOException exp) {
-            throw new ServiceException(exp);
+            default -> {
+                products = productRepository.findAllProductsByCategoryToAdmin(categoryName);
+            }
         }
+        String json = JsonUtil.toJson(DATA, products);
+        ajaxData.setJson(json);
 
         return ajaxData;
     }
@@ -105,19 +91,15 @@ public class ProductServiceImpl implements ProductService {
         long idProduct = Long.parseLong(idProductString);
         long idCategory = Long.parseLong(idCategoryString);
 
-        try {
-            Optional<Category> categoryOptional = categoryDao.findCategoryById(idCategory);
-            if (categoryOptional.isEmpty()) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
-                return ajaxData;
-            }
+        Optional<Category> categoryOptional = categoryRepository.findById(idCategory);
+        if (categoryOptional.isEmpty()) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
+            return ajaxData;
+        }
 
-            boolean isUpdated = productDao.updateProductCategory(idProduct, idCategory);
-            if (!isUpdated) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
-            }
-        } catch (DaoException exp) {
-            throw new ServiceException(exp);
+        boolean isUpdated = productRepository.updateProductCategory(idCategory, idProduct);
+        if (!isUpdated) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
         }
 
         return ajaxData;
@@ -137,21 +119,17 @@ public class ProductServiceImpl implements ProductService {
 
         long id = Long.parseLong(idString);
         BigDecimal price = new BigDecimal(priceString);
-        try {
-            Optional<Product> productOptional = productDao.findProductByName(name);
-            if (productOptional.isPresent()
-                    && productOptional.get().getId() != id) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
-                return ajaxData;
-            }
 
-            Product product = null;
-            boolean isUpdated = productDao.updateProductInfo(product);
-            if (!isUpdated) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
-            }
-        } catch (DaoException exp) {
-            throw new ServiceException(exp);
+        Optional<Product> productOptional = productRepository.findByName(name);
+        if (productOptional.isPresent()
+                && productOptional.get().getId() != id) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
+            return ajaxData;
+        }
+
+        boolean isUpdated = productRepository.updateProductInfo(id, name, info, price);
+        if (!isUpdated) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
         }
 
         return ajaxData;
@@ -168,21 +146,19 @@ public class ProductServiceImpl implements ProductService {
         }
 
         long idProduct = Long.parseLong(idProductString);
-        long idStatus = Long.parseLong(idStatusString);
+        int idStatus = Integer.parseInt(idStatusString);
 
+        Product.Status status;
         try {
-            Optional<Product.Status> statusOptional = productDao.findStatusById(idStatus);
-            if (statusOptional.isEmpty()) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
-                return ajaxData;
-            }
+            status = Product.Status.values()[idStatus];
+        } catch (IndexOutOfBoundsException ex) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
+            return ajaxData;
+        }
 
-            boolean isUpdated = productDao.updateProductStatus(idProduct, idStatus);
-            if (!isUpdated) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
-            }
-        } catch (DaoException exp) {
-            throw new ServiceException(exp);
+        boolean isUpdated = productRepository.updateProductStatus(idProduct, idStatus);
+        if (!isUpdated) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
         }
 
         return ajaxData;
@@ -197,23 +173,19 @@ public class ProductServiceImpl implements ProductService {
             return ajaxData;
         }
 
-        try {
-            Optional<Product> productOptional = productDao.findProductByName(productName);
-            if (productOptional.isEmpty()) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
-                return ajaxData;
-            }
-
-            Product product = productOptional.get();
-            if (shoppingCart.contains(product)) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
-                return ajaxData;
-            }
-
-            shoppingCart.add(product);
-        } catch (DaoException exp) {
-            throw new ServiceException(exp);
+        Optional<Product> productOptional = productRepository.findByName(productName);
+        if (productOptional.isEmpty()) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
+            return ajaxData;
         }
+
+        Product product = productOptional.get();
+        if (shoppingCart.contains(product)) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
+            return ajaxData;
+        }
+
+        shoppingCart.add(product);
 
         return ajaxData;
     }
@@ -228,23 +200,19 @@ public class ProductServiceImpl implements ProductService {
             return ajaxData;
         }
 
-        try {
-            Optional<Product> productOptional = productDao.findProductByName(productName);
-            if (productOptional.isEmpty()) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
-                return ajaxData;
-            }
-
-            Product product = productOptional.get();
-            if (!shoppingCart.contains(product)) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
-                return ajaxData;
-            }
-
-            shoppingCart.remove(product);
-        } catch (DaoException exp) {
-            throw new ServiceException(exp);
+        Optional<Product> productOptional = productRepository.findByName(productName);
+        if (productOptional.isEmpty()) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_NOT_FOUND);
+            return ajaxData;
         }
+
+        Product product = productOptional.get();
+        if (!shoppingCart.contains(product)) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
+            return ajaxData;
+        }
+
+        shoppingCart.remove(product);
 
         return ajaxData;
     }
@@ -264,7 +232,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public AjaxData uploadProductImage(String productName, List<FileItem> fileItems, String language) throws ServiceException {
+    public AjaxData uploadProductImage(String productName, List<FileItem> fileItems, String language) throws ServiceException, IOException {
         AjaxData ajaxData = new AjaxData();
 
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -275,52 +243,48 @@ public class ProductServiceImpl implements ProductService {
             return ajaxData;
         }
 
-        try {
-            if (fileItems.size() != FILES_COUNT) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
-                JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_PROFILE_AVATAR_COUNT_ALLOWED_FILES, language);
-                return ajaxData;
-            }
-
-            FileItem file = fileItems.get(FIRST);
-            if (file.getSize() > FILE_MAX_SIZE) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
-                JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_PROFILE_AVATAR_MAX_SIZE, language);
-                return ajaxData;
-            }
-
-            if (file.isFormField()) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
-                JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_PROFILE_AVATAR_FORM_FIELD, language);
-                return ajaxData;
-            }
-
-            String contentType = file.getContentType();
-            if (!FILE_TYPE.contains(contentType)) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
-                JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_PROFILE_AVATAR_FORMAT, language);
-                return ajaxData;
-            }
-
-            Optional<String> URLOptional = productDao.findImageURLByName(productName);
-            if (URLOptional.isPresent()) {
-                String avatarURL = URLOptional.get();
-                ImageUtil.remove(avatarURL);
-            }
-
-            String fileURL = ImageUtil.save(file);
-            productDao.updateImageURLByName(productName, fileURL);
-            JsonUtil.writeJsonToAjaxData(ajaxData, URL, fileURL);
-        } catch (DaoException | IOException exp) {
-            throw new ServiceException(exp);
+        if (fileItems.size() != FILES_COUNT) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_PROFILE_AVATAR_COUNT_ALLOWED_FILES, language);
+            return ajaxData;
         }
+
+        FileItem file = fileItems.get(FIRST);
+        if (file.getSize() > FILE_MAX_SIZE) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_PROFILE_AVATAR_MAX_SIZE, language);
+            return ajaxData;
+        }
+
+        if (file.isFormField()) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_PROFILE_AVATAR_FORM_FIELD, language);
+            return ajaxData;
+        }
+
+        String contentType = file.getContentType();
+        if (!FILE_TYPE.contains(contentType)) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_PROFILE_AVATAR_FORMAT, language);
+            return ajaxData;
+        }
+
+        Optional<String> URLOptional = productRepository.findImageURLByProductName(productName);
+        if (URLOptional.isPresent()) {
+            String avatarURL = URLOptional.get();
+            ImageUtil.remove(avatarURL);
+        }
+
+        String fileURL = ImageUtil.save(file);
+        productRepository.updateImageURLByProductName(productName, fileURL);
+        JsonUtil.writeJsonToAjaxData(ajaxData, URL, fileURL);
 
         return ajaxData;
     }
 
     @Override
     public AjaxData createProduct(String idCategoryString, String name, String info,
-                                  String priceString, String language) throws ServiceException {
+                                  String priceString, String language) throws ServiceException, IOException {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isIdCorrect(idCategoryString)
@@ -331,22 +295,29 @@ public class ProductServiceImpl implements ProductService {
             return ajaxData;
         }
 
-        try {
-            Optional<Product> productOptional = productDao.findProductByName(name);
-            if (productOptional.isPresent()) {
-                ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
-                JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_NAME_NOT_UNIQUE, language);
-                return ajaxData;
-            }
-
-            long idCategory = Long.parseLong(idCategoryString);
-            BigDecimal price = new BigDecimal(priceString);
-
-            Product product =null;
-            productDao.add(product, idCategory);
-        } catch (DaoException | IOException exp) {
-            throw new ServiceException(exp);
+        Optional<Product> productOptional = productRepository.findByName(name);
+        if (productOptional.isPresent()) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.writeJsonToAjaxData(ajaxData, ERROR, ERROR_NAME_NOT_UNIQUE, language);
+            return ajaxData;
         }
+
+        long idCategory = Long.parseLong(idCategoryString);
+        BigDecimal price = new BigDecimal(priceString);
+
+        Optional<Category> category = categoryRepository.findById(idCategory);
+        if (category.isEmpty()) {
+            ajaxData.setStatusHttp(HttpServletResponse.SC_BAD_REQUEST);
+            return ajaxData;
+        }
+
+        Product product = ProductBuilder.builder()
+                .setName(name)
+                .setInfo(info)
+                .setStatus(Product.Status.ACTIVE)
+                .setPrice(price)
+                .build();
+        productRepository.save(product);
 
         return ajaxData;
     }

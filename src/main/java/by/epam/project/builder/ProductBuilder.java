@@ -15,32 +15,39 @@ public class ProductBuilder {
     private String imageURL;
     private Category category;
 
-    public void setId(Long id) {
+    public ProductBuilder setId(Long id) {
         this.id = id;
+        return this;
     }
 
-    public void setName(String name) {
+    public ProductBuilder setName(String name) {
         this.name = name;
+        return this;
     }
 
-    public void setInfo(String info) {
+    public ProductBuilder setInfo(String info) {
         this.info = info;
+        return this;
     }
 
-    public void setStatus(Product.Status status) {
+    public ProductBuilder setStatus(Product.Status status) {
         this.status = status;
+        return this;
     }
 
-    public void setPrice(BigDecimal price) {
+    public ProductBuilder setPrice(BigDecimal price) {
         this.price = price;
+        return this;
     }
 
-    public void setImageURL(String imageURL) {
+    public ProductBuilder setImageURL(String imageURL) {
         this.imageURL = imageURL;
+        return this;
     }
 
-    public void setCategory(Category category) {
+    public ProductBuilder setCategory(Category category) {
         this.category = category;
+        return this;
     }
 
     public static ProductBuilder builder() {

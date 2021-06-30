@@ -4,6 +4,7 @@ import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
 import by.epam.project.exception.CommandException;
 import by.epam.project.exception.ServiceException;
+import by.epam.project.service.CategoryService;
 import by.epam.project.service.ProductService;
 import by.epam.project.service.impl.ProductServiceImpl;
 import org.apache.commons.fileupload.FileItem;
@@ -12,10 +13,12 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 
 import static by.epam.project.controller.parameter.Parameter.LANGUAGE;
@@ -26,7 +29,8 @@ import static by.epam.project.controller.parameter.Parameter.NAME;
  */
 public class UploadProductImageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private final ProductService productService = ProductServiceImpl.getInstance();
+    @Autowired
+    private ProductService productService;
 
     @Override
     public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -49,7 +53,7 @@ public class UploadProductImageCommand implements Command {
         try {
             fileItems = upload.parseRequest(request);
             ajaxData = productService.uploadProductImage(productName, fileItems, language);
-        } catch (ServiceException | FileUploadException exp) {
+        } catch (ServiceException | FileUploadException | IOException exp) {
             logger.error("Error during uploading product image");
             throw new CommandException(exp);
         }

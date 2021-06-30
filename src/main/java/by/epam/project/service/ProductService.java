@@ -6,6 +6,7 @@ import by.epam.project.entity.Product;
 import by.epam.project.entity.User;
 import org.apache.commons.fileupload.FileItem;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public interface ProductService {
      * @throws ServiceException the service exception
      */
     AjaxData findAllProductsByCategory(User.Role userRole, String categoryName,
-                                       List<Product> shoppingCart) throws ServiceException;
+                                       List<Product> shoppingCart) throws ServiceException, IOException;
 
     /**
      * Remove product from shopping cart ajax data.
@@ -95,7 +96,7 @@ public interface ProductService {
      * @return the ajax data
      * @throws ServiceException the service exception
      */
-    AjaxData uploadProductImage(String productName, List<FileItem> fileItems, String language) throws ServiceException;
+    AjaxData uploadProductImage(String productName, List<FileItem> fileItems, String language) throws ServiceException, IOException;
 
     /**
      * Create product ajax data.
@@ -109,5 +110,5 @@ public interface ProductService {
      * @throws ServiceException the service exception
      */
     AjaxData createProduct(String idCategoryString, String name, String info,
-                           String priceString, String language) throws ServiceException;
+                           String priceString, String language) throws ServiceException, IOException;
 }

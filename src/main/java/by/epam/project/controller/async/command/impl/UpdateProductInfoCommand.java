@@ -9,6 +9,7 @@ import by.epam.project.service.impl.ProductServiceImpl;
 import by.epam.project.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,8 @@ import static by.epam.project.controller.parameter.Parameter.PRICE;
  */
 public class UpdateProductInfoCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private final ProductService productService = ProductServiceImpl.getInstance();
+    @Autowired
+    private ProductService productService;
 
     @Override
     public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
