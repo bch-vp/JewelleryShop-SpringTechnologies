@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * The type Load all categories command.
  */
-@Component
+@Component("load_all_categories")
 public class LoadAllCategoriesCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 

@@ -2,7 +2,6 @@ package by.epam.project.controller.sync.command;
 
 import by.epam.project.controller.sync.command.impl.ChangeLanguageCommand;
 import by.epam.project.controller.sync.command.impl.ConfirmSignUpCommand;
-import by.epam.project.controller.sync.command.impl.EmptyCommand;
 import by.epam.project.controller.sync.command.impl.PassingByAdminCommand;
 import by.epam.project.controller.sync.command.impl.PassingByClientCommand;
 import by.epam.project.controller.sync.command.impl.PassingByGuestCommand;
@@ -23,7 +22,7 @@ public enum CommandType {
     /**
      * The Empty command.
      */
-    EMPTY_COMMAND(new EmptyCommand()),
+//    EMPTY_COMMAND(new EmptyCommand()),
     /**
      * The Passing by admin.
      */

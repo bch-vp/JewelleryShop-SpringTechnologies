@@ -14,6 +14,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +28,7 @@ import static by.epam.project.controller.parameter.Parameter.NAME;
 /**
  * The type Upload product image command.
  */
+@Component("upload_product_image")
 public class UploadProductImageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     @Autowired

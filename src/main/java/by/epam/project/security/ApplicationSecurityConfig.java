@@ -68,7 +68,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .regexMatchers(adminUrls).hasRole(RolePermission.ADMIN.name())
                 .regexMatchers(clientUrls).hasRole(RolePermission.CLIENT.name())
                 .anyRequest()
-                .permitAll();
+                .permitAll()
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/jsp/error404.jsp");
     }
 
     @Bean

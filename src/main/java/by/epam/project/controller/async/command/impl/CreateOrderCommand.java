@@ -11,6 +11,7 @@ import by.epam.project.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ import static by.epam.project.controller.parameter.Parameter.USER;
 /**
  * The type Create order command.
  */
+@Component("create_order")
 public class CreateOrderCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     @Autowired

@@ -16,7 +16,6 @@ public interface Command {
      * @param request  the request
      * @param response the response
      * @return the ajax data
-     * @throws CommandException the command exception
      */
-    AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException;
+    AjaxData execute(HttpServletRequest request, HttpServletResponse response);
 }

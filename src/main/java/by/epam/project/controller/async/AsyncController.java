@@ -1,12 +1,11 @@
 package by.epam.project.controller.async;
 
 import by.epam.project.controller.async.command.Command;
-import by.epam.project.controller.async.command.CommandProvider;
 import by.epam.project.exception.CommandException;
-import by.epam.project.connection.ConnectionPool;
 import by.epam.project.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +24,12 @@ import static by.epam.project.controller.parameter.Parameter.COMMAND;
 public class AsyncController {
     private static final Logger logger = LogManager.getLogger();
 
+    private final ApplicationContext applicationContext;
+
+    public AsyncController(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
     @GetMapping("/ajax")
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         processRequest(request, response);
@@ -36,18 +41,8 @@ public class AsyncController {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) {
-        Command command = CommandProvider.provideCommand(request.getParameter(COMMAND));
-        try {
+        Command command = (Command) applicationContext.getBean(request.getParameter(COMMAND));
             AjaxData ajaxData = command.execute(request, response);
             JsonUtil.writeAjaxDataToResponse(response, ajaxData);
-        } catch (CommandException | IOException exp) {
-            logger.error(exp);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PreDestroy
-    public void destroy() {
-        ConnectionPool.getInstance().destroyPool();
     }
 }
