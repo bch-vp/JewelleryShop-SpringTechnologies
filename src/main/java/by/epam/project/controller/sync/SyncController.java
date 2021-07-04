@@ -9,11 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 import static by.epam.project.controller.parameter.Parameter.COMMAND;
 import static by.epam.project.controller.parameter.Parameter.IS_DEV_MODE;
@@ -33,17 +31,16 @@ public class SyncController {
     }
 
     @PostMapping
-    protected String doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        return processRequest(request, response);
+    protected String doPost(HttpServletRequest request) {
+        return processRequest(request);
     }
 
     @GetMapping
-    protected String doGet(HttpServletRequest request, HttpServletResponse response) {
-        return processRequest(request, response);
+    protected String doGet(HttpServletRequest request) {
+        return processRequest(request);
     }
 
-    private String processRequest(HttpServletRequest request, HttpServletResponse response) {
+    private String processRequest(HttpServletRequest request) {
         boolean isDevMode = Boolean.parseBoolean(System.getenv(IS_DEV_MODE));
 
         HttpSession session = request.getSession();

@@ -1,7 +1,6 @@
 package by.epam.project.service;
 
 import by.epam.project.controller.async.AjaxData;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.entity.Product;
 import by.epam.project.entity.User;
 import org.apache.commons.fileupload.FileItem;
@@ -13,102 +12,24 @@ import java.util.List;
  * The interface Product service.
  */
 public interface ProductService {
-    /**
-     * Add product to shopping cart ajax data.
-     *
-     * @param shoppingCart the shopping cart
-     * @param productName  the product name
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData addProductToShoppingCart(List<Product> shoppingCart, String productName) throws ServiceException;
+    AjaxData addProductToShoppingCart(List<Product> shoppingCart, String productName);
 
-    /**
-     * Find all products by category ajax data.
-     *
-     * @param userRole     the user role
-     * @param categoryName the category name
-     * @param shoppingCart the shopping cart
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
     AjaxData findAllProductsByCategory(User.Role userRole, String categoryName,
-                                       List<Product> shoppingCart) throws ServiceException, IOException;
+                                       List<Product> shoppingCart) throws IOException;
 
-    /**
-     * Remove product from shopping cart ajax data.
-     *
-     * @param shoppingCart the shopping cart
-     * @param productName  the product name
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData removeProductFromShoppingCart(List<Product> shoppingCart, String productName) throws ServiceException;
+    AjaxData removeProductFromShoppingCart(List<Product> shoppingCart, String productName);
 
-    /**
-     * Load shopping cart ajax data.
-     *
-     * @param shoppingCart the shopping cart
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData loadShoppingCart(List<Product> shoppingCart) throws ServiceException;
+    AjaxData loadShoppingCart(List<Product> shoppingCart) throws IOException;
 
-    /**
-     * Update product category ajax data.
-     *
-     * @param idProductString  the id product string
-     * @param idCategoryString the id category string
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData updateProductCategory(String idProductString, String idCategoryString) throws ServiceException;
+    AjaxData updateProductCategory(String idProductString, String idCategoryString);
 
-    /**
-     * Update product info ajax data.
-     *
-     * @param idString    the id string
-     * @param name        the name
-     * @param info        the info
-     * @param priceString the price string
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
     AjaxData updateProductInfo(String idString, String name,
-                               String info, String priceString) throws ServiceException;
+                               String info, String priceString);
 
-    /**
-     * Update product status ajax data.
-     *
-     * @param idProductString the id product string
-     * @param idStatusString  the id status string
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData updateProductStatus(String idProductString, String idStatusString) throws ServiceException;
+    AjaxData updateProductStatus(String idProductString, String idStatusString);
 
-    /**
-     * Upload product image ajax data.
-     *
-     * @param productName the product name
-     * @param fileItems   the file items
-     * @param language    the language
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
-    AjaxData uploadProductImage(String productName, List<FileItem> fileItems, String language) throws ServiceException, IOException;
+    AjaxData uploadProductImage(String productName, List<FileItem> fileItems, String language) throws IOException;
 
-    /**
-     * Create product ajax data.
-     *
-     * @param idCategoryString the id category string
-     * @param name             the name
-     * @param info             the info
-     * @param priceString      the price string
-     * @param language         the language
-     * @return the ajax data
-     * @throws ServiceException the service exception
-     */
     AjaxData createProduct(String idCategoryString, String name, String info,
-                           String priceString, String language) throws ServiceException, IOException;
+                           String priceString, String language) throws IOException;
 }

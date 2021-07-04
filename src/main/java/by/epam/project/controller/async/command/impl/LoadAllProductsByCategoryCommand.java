@@ -4,10 +4,7 @@ import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
 import by.epam.project.entity.Product;
 import by.epam.project.entity.User;
-import by.epam.project.exception.CommandException;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.service.ProductService;
-import by.epam.project.service.impl.ProductServiceImpl;
 import by.epam.project.util.JsonUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -18,12 +15,12 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import static by.epam.project.controller.parameter.Parameter.NAME;
 import static by.epam.project.controller.parameter.Parameter.SHOPPING_CART;
 import static by.epam.project.controller.parameter.Parameter.USER;
@@ -38,29 +35,22 @@ public class LoadAllProductsByCategoryCommand implements Command {
     private ProductService productService;
 
     @Override
-    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AjaxData ajaxData;
 
         HttpSession session = request.getSession();
         List<Product> shoppingCart = (ArrayList<Product>) session.getAttribute(SHOPPING_CART);
 
-        try {
-            InputStream i = request.getInputStream();
-            String a = IOUtils.toString(i, String.valueOf(StandardCharsets.UTF_8));
-            Map<String, Object> requestParameters = JsonUtil.toMap(i);
-            String categoryName = (String) requestParameters.get(NAME);
+        Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
+        String categoryName = (String) requestParameters.get(NAME);
 
-            User user = (User) session.getAttribute(USER);
-            User.Role userRole = User.Role.GUEST;
-            if (user != null) {
-                userRole = user.getRole();
-            }
-
-            ajaxData = productService.findAllProductsByCategory(userRole, categoryName, shoppingCart);
-        } catch (ServiceException | IOException exp) {
-            logger.error("Error during loading all products by category");
-            throw new CommandException(exp);
+        User user = (User) session.getAttribute(USER);
+        User.Role userRole = User.Role.GUEST;
+        if (user != null) {
+            userRole = user.getRole();
         }
+
+        ajaxData = productService.findAllProductsByCategory(userRole, categoryName, shoppingCart);
 
         return ajaxData;
     }

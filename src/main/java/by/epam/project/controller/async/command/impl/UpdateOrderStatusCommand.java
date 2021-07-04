@@ -2,7 +2,6 @@ package by.epam.project.controller.async.command.impl;
 
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
-import by.epam.project.exception.CommandException;
 import by.epam.project.service.OrderService;
 import by.epam.project.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Map;
 
 import static by.epam.project.controller.parameter.Parameter.ID_ORDER;
@@ -29,20 +27,15 @@ public class UpdateOrderStatusCommand implements Command {
     private OrderService orderService;
 
     @Override
-    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AjaxData ajaxData;
 
-        try {
-            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
+        Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String idOrderString = (String) requestParameters.get(ID_ORDER);
-            String idStatusString = (String) requestParameters.get(ID_STATUS);
+        String idOrderString = (String) requestParameters.get(ID_ORDER);
+        String idStatusString = (String) requestParameters.get(ID_STATUS);
 
-            ajaxData = orderService.updateStatusById(idOrderString, idStatusString);
-        } catch (IOException exp) {
-            logger.error("Error during updating order status");
-            throw new CommandException(exp);
-        }
+        ajaxData = orderService.updateStatusById(idOrderString, idStatusString);
 
         return ajaxData;
     }

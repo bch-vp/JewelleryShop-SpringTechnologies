@@ -4,6 +4,7 @@ import by.epam.project.controller.sync.Router;
 import by.epam.project.controller.sync.command.Command;
 import by.epam.project.controller.sync.command.CommandType;
 import by.epam.project.util.URLUtil;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -13,6 +14,7 @@ import static by.epam.project.controller.parameter.Parameter.LANGUAGE;
 /**
  * The type Sign out command.
  */
+@Component("sign_out")
 public class SignOutCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {

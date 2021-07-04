@@ -3,7 +3,6 @@ package by.epam.project.service.impl;
 import by.epam.project.builder.CategoryBuilder;
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.entity.Category;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.repository.CategoryRepository;
 import by.epam.project.service.CategoryService;
 import by.epam.project.util.JsonUtil;
@@ -32,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public AjaxData createCategory(String nameCategory, String language) throws ServiceException, IOException {
+    public AjaxData createCategory(String nameCategory, String language) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isNameCorrect(nameCategory)) {
@@ -58,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public AjaxData findAllCategories() throws ServiceException, IOException {
+    public AjaxData findAllCategories() throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         List<Category> categories = categoryRepository.findAll();
@@ -70,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public AjaxData removeCategory(String idCategoryString) throws ServiceException {
+    public AjaxData removeCategory(String idCategoryString) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isIdCorrect(idCategoryString)) {
@@ -97,7 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public AjaxData updateCategoryName(String idCategoryString, String newName, String language) throws ServiceException, IOException {
+    public AjaxData updateCategoryName(String idCategoryString, String newName, String language) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isIdCorrect(idCategoryString) ||

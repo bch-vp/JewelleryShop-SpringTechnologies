@@ -5,7 +5,6 @@ import by.epam.project.controller.async.AjaxData;
 import by.epam.project.entity.Category;
 import by.epam.project.entity.Product;
 import by.epam.project.entity.User;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.repository.CategoryRepository;
 import by.epam.project.repository.ProductRepository;
 import by.epam.project.service.ProductService;
@@ -51,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public AjaxData findAllProductsByCategory(User.Role userRole, String categoryName,
-                                              List<Product> shoppingCart) throws ServiceException, IOException {
+                                              List<Product> shoppingCart) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isNameCorrect(categoryName)) {
@@ -79,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public AjaxData updateProductCategory(String idProductString, String idCategoryString) throws ServiceException {
+    public AjaxData updateProductCategory(String idProductString, String idCategoryString) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isIdCorrect(idProductString)
@@ -106,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public AjaxData updateProductInfo(String idString, String name, String info, String priceString) throws ServiceException {
+    public AjaxData updateProductInfo(String idString, String name, String info, String priceString) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isIdCorrect(idString)
@@ -136,7 +135,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public AjaxData updateProductStatus(String idProductString, String idStatusString) throws ServiceException {
+    public AjaxData updateProductStatus(String idProductString, String idStatusString) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isIdCorrect(idProductString)
@@ -165,7 +164,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public AjaxData addProductToShoppingCart(List<Product> shoppingCart, String productName) throws ServiceException {
+    public AjaxData addProductToShoppingCart(List<Product> shoppingCart, String productName) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isNameCorrect(productName)) {
@@ -192,7 +191,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public AjaxData removeProductFromShoppingCart(List<Product> shoppingCart,
-                                                  String productName) throws ServiceException {
+                                                  String productName) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isNameCorrect(productName)) {
@@ -218,21 +217,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public AjaxData loadShoppingCart(List<Product> shoppingCart) throws ServiceException {
+    public AjaxData loadShoppingCart(List<Product> shoppingCart) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
-        try {
             String json = JsonUtil.toJson(DATA, shoppingCart);
             ajaxData.setJson(json);
-        } catch (IOException exp) {
-            throw new ServiceException(exp);
-        }
 
         return ajaxData;
     }
 
     @Override
-    public AjaxData uploadProductImage(String productName, List<FileItem> fileItems, String language) throws ServiceException, IOException {
+    public AjaxData uploadProductImage(String productName, List<FileItem> fileItems, String language) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -284,7 +279,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public AjaxData createProduct(String idCategoryString, String name, String info,
-                                  String priceString, String language) throws ServiceException, IOException {
+                                  String priceString, String language) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isIdCorrect(idCategoryString)

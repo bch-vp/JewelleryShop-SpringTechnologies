@@ -6,7 +6,6 @@ import by.epam.project.controller.parameter.ContentKey;
 import by.epam.project.controller.parameter.ErrorKey;
 import by.epam.project.controller.sync.command.CommandType;
 import by.epam.project.entity.User;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.repository.UserRepository;
 import by.epam.project.security.ApplicationUserRole;
 import by.epam.project.service.UserService;
@@ -94,7 +93,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public AjaxData uploadUserImage(String userLogin, List<FileItem> fileItems, String language) throws ServiceException, IOException {
+    public AjaxData uploadUserImage(String userLogin, List<FileItem> fileItems, String language) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -146,7 +145,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public AjaxData updateProfile(User user, String newLogin, String newFirstName, String newLastName,
-                                  String newTelephoneNumber, String newEmail, String language) throws ServiceException {
+                                  String newTelephoneNumber, String newEmail, String language) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isLoginCorrect(newLogin)
@@ -198,7 +197,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public AjaxData signUp(String login, String password, String firstName, String lastName, String telephoneNumber,
-                           String email, String confirmationLink, String language) throws ServiceException {
+                           String email, String confirmationLink, String language) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isLoginCorrect(login)
@@ -261,7 +260,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public AjaxData changePasswordByOldPassword(User user, String oldPassword, String newPassword,
-                                                String language) throws ServiceException, IOException {
+                                                String language) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isPasswordCorrect(oldPassword)
@@ -288,7 +287,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public AjaxData changePasswordByEmail(String login, String newPassword, String email, String sessionUniqueKey,
-                                          String requestUniqueKey, String timeCreated, String language) throws ServiceException, IOException {
+                                          String requestUniqueKey, String timeCreated, String language) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isLoginCorrect(login)
@@ -354,7 +353,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public AjaxData removeUserImage(String login) throws ServiceException, IOException {
+    public AjaxData removeUserImage(String login) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         Optional<String> URLOptional = userRepository.findAvatarURLByLogin(login);
@@ -371,7 +370,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public AjaxData findUserImage(String login) throws ServiceException, IOException {
+    public AjaxData findUserImage(String login) throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         Optional<String> URLOptional = userRepository.findAvatarURLByLogin(login);
@@ -386,7 +385,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public AjaxData checkLoginExistence(String login) throws ServiceException {
+    public AjaxData checkLoginExistence(String login) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isLoginCorrect(login)) {
@@ -405,7 +404,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public AjaxData findAllClients() throws ServiceException, IOException {
+    public AjaxData findAllClients() throws IOException {
         AjaxData ajaxData = new AjaxData();
 
         List<User> users = userRepository.findAllClients();
@@ -416,7 +415,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public AjaxData updateClientStatus(String idUserString, String idStatusString) throws ServiceException {
+    public AjaxData updateClientStatus(String idUserString, String idStatusString) {
         AjaxData ajaxData = new AjaxData();
 
         if (!ServiceValidator.isIdCorrect(idUserString)
@@ -442,18 +441,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         return ajaxData;
-    }
-
-    @Override
-    public boolean updateActivationStatusByLogin(String login, User.Status status) throws ServiceException {
-        boolean isUpdated;
-
-        if (!ServiceValidator.isLoginCorrect(login)) {
-            return false;
-        }
-
-        isUpdated = userRepository.updateStatusByLogin(login, status.name());
-
-        return isUpdated;
     }
 }

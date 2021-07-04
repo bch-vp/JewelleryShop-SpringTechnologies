@@ -4,8 +4,6 @@ import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
 import by.epam.project.entity.Product;
 import by.epam.project.entity.User;
-import by.epam.project.exception.CommandException;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.service.OrderService;
 import by.epam.project.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
@@ -16,10 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,24 +33,19 @@ public class CreateOrderCommand implements Command {
     private OrderService orderService;
 
     @Override
-    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AjaxData ajaxData;
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(USER);
         Set<Product> shoppingCart = (HashSet<Product>) session.getAttribute(SHOPPING_CART);
 
-        try {
-            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
+        Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String OrderComment = (String) requestParameters.get(COMMENT);
-            String OrderAddress = (String) requestParameters.get(ADDRESS);
+        String OrderComment = (String) requestParameters.get(COMMENT);
+        String OrderAddress = (String) requestParameters.get(ADDRESS);
 
-            ajaxData = orderService.createOrder(user, shoppingCart, OrderAddress, OrderComment);
-        } catch (IOException exp) {
-            logger.error("Error during creating order");
-            throw new CommandException(exp);
-        }
+        ajaxData = orderService.createOrder(user, shoppingCart, OrderAddress, OrderComment);
 
         return ajaxData;
     }

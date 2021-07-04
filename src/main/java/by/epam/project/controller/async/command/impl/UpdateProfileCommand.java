@@ -4,8 +4,6 @@ import by.epam.project.builder.UserBuilder;
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
 import by.epam.project.entity.User;
-import by.epam.project.exception.CommandException;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.service.UserService;
 import by.epam.project.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.Map;
 
 import static by.epam.project.controller.parameter.Parameter.EMAIL;
@@ -37,44 +34,39 @@ public class UpdateProfileCommand implements Command {
     private UserService userService;
 
     @Override
-    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AjaxData ajaxData;
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(USER);
         String language = (String) session.getAttribute(LANGUAGE);
 
-        try {
-            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
+        Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String newLogin = (String) requestParameters.get(LOGIN);
-            String newFirstName = (String) requestParameters.get(FIRST_NAME);
-            String newLastName = (String) requestParameters.get(LAST_NAME);
-            String newTelephoneNumber = (String) requestParameters.get(TELEPHONE_NUMBER);
-            String newEmail = (String) requestParameters.get(EMAIL);
+        String newLogin = (String) requestParameters.get(LOGIN);
+        String newFirstName = (String) requestParameters.get(FIRST_NAME);
+        String newLastName = (String) requestParameters.get(LAST_NAME);
+        String newTelephoneNumber = (String) requestParameters.get(TELEPHONE_NUMBER);
+        String newEmail = (String) requestParameters.get(EMAIL);
 
-            ajaxData = userService.updateProfile(user, newLogin, newFirstName, newLastName, newTelephoneNumber,
-                    newEmail, language);
-            if (ajaxData.getStatusHttp() != HttpServletResponse.SC_OK) {
-                return ajaxData;
-            }
-
-            User newUser = UserBuilder.builder()
-                    .setId(user.getId())
-                    .setLogin(newLogin)
-                    .setFirstName(newFirstName)
-                    .setLastName(newLastName)
-                    .setTelephoneNumber(newTelephoneNumber)
-                    .setEmail(newEmail)
-                    .setRole(user.getRole())
-                    .setStatus(user.getStatus())
-                    .build();
-
-            session.setAttribute(USER, newUser);
-        } catch (ServiceException | IOException exp) {
-            logger.error("Error during updating user profile");
-            throw new CommandException(exp);
+        ajaxData = userService.updateProfile(user, newLogin, newFirstName, newLastName, newTelephoneNumber,
+                newEmail, language);
+        if (ajaxData.getStatusHttp() != HttpServletResponse.SC_OK) {
+            return ajaxData;
         }
+
+        User newUser = UserBuilder.builder()
+                .setId(user.getId())
+                .setLogin(newLogin)
+                .setFirstName(newFirstName)
+                .setLastName(newLastName)
+                .setTelephoneNumber(newTelephoneNumber)
+                .setEmail(newEmail)
+                .setRole(user.getRole())
+                .setStatus(user.getStatus())
+                .build();
+
+        session.setAttribute(USER, newUser);
 
         return ajaxData;
     }

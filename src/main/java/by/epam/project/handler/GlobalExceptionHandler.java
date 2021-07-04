@@ -11,6 +11,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static by.epam.project.controller.parameter.Parameter.COMMAND;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger logger = LogManager.getLogger();
@@ -18,7 +20,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({UnsatisfiedServletRequestParameterException.class, NoHandlerFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleUrlException(HttpServletRequest request, Exception ex) {
-        logger.info(ex);
         return "redirect:/jsp/error404.jsp";
     }
 
@@ -26,7 +27,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleThrowableException(HttpServletRequest request, Exception ex) {
-        logger.error(ex);
+        String command = request.getParameter(COMMAND);
+        logger.error("Error during " + command, ex);
         return "redirect:/jsp/error500.jsp";
     }
 }

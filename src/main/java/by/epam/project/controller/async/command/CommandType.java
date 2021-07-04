@@ -16,7 +16,6 @@ import by.epam.project.controller.async.command.impl.LoadShoppingCartCommand;
 import by.epam.project.controller.async.command.impl.RemoveCategoryCommand;
 import by.epam.project.controller.async.command.impl.RemoveProductFromShoppingCartCommand;
 import by.epam.project.controller.async.command.impl.RemoveProfileImageCommand;
-import by.epam.project.controller.async.command.impl.SignInCommand;
 import by.epam.project.controller.async.command.impl.SignUpCommand;
 import by.epam.project.controller.async.command.impl.UpdateCategoryNameCommand;
 import by.epam.project.controller.async.command.impl.UpdateClientStatusCommand;
@@ -96,10 +95,6 @@ public enum CommandType {
      * The Remove profile image.
      */
     REMOVE_PROFILE_IMAGE(new RemoveProfileImageCommand()),
-    /**
-     * The Sign in.
-     */
-    SIGN_IN(new SignInCommand()),
     /**
      * The Sign up.
      */

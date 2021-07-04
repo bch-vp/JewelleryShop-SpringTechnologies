@@ -3,10 +3,7 @@ package by.epam.project.controller.async.command.impl;
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
 import by.epam.project.entity.User;
-import by.epam.project.exception.CommandException;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.service.OrderService;
-import by.epam.project.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +25,7 @@ public class LoadAllOrdersCommand implements Command {
     private OrderService orderService;
 
     @Override
-    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) {
         AjaxData ajaxData;
 
         HttpSession session = request.getSession();

@@ -5,12 +5,14 @@ import by.epam.project.controller.sync.Router;
 import by.epam.project.controller.sync.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * The type Passing by guest command.
  */
+@Component("passing_by_guest")
 public class PassingByGuestCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 

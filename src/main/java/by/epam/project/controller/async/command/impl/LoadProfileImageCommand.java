@@ -3,8 +3,6 @@ package by.epam.project.controller.async.command.impl;
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
 import by.epam.project.entity.User;
-import by.epam.project.exception.CommandException;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 import static by.epam.project.controller.parameter.Parameter.USER;
 
@@ -28,17 +25,13 @@ public class LoadProfileImageCommand implements Command {
     private UserService userService;
 
     @Override
-    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AjaxData ajaxData;
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(USER);
-        try {
-            ajaxData = userService.findUserImage(user.getLogin());
-        } catch (ServiceException | IOException exp) {
-            logger.error("Error during loading user image");
-            throw new CommandException(exp);
-        }
+
+        ajaxData = userService.findUserImage(user.getLogin());
 
         return ajaxData;
     }

@@ -2,8 +2,6 @@ package by.epam.project.controller.async.command.impl;
 
 import by.epam.project.controller.async.AjaxData;
 import by.epam.project.controller.async.command.Command;
-import by.epam.project.exception.CommandException;
-import by.epam.project.exception.ServiceException;
 import by.epam.project.service.UserService;
 import by.epam.project.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Map;
 
 import static by.epam.project.controller.parameter.Parameter.ID_STATUS;
@@ -29,20 +26,15 @@ public class UpdateClientStatusCommand implements Command {
     private UserService userService;
 
     @Override
-    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    public AjaxData execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AjaxData ajaxData;
 
-        try {
-            Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
+        Map<String, Object> requestParameters = JsonUtil.toMap(request.getInputStream());
 
-            String idUserString = (String) requestParameters.get(ID_USER);
-            String idStatusString = (String) requestParameters.get(ID_STATUS);
+        String idUserString = (String) requestParameters.get(ID_USER);
+        String idStatusString = (String) requestParameters.get(ID_STATUS);
 
-            ajaxData = userService.updateClientStatus(idUserString, idStatusString);
-        } catch (ServiceException | IOException exp) {
-            logger.error("Error during updating client status");
-            throw new CommandException(exp);
-        }
+        ajaxData = userService.updateClientStatus(idUserString, idStatusString);
 
         return ajaxData;
     }

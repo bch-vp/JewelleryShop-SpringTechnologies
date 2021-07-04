@@ -6,6 +6,7 @@ import by.epam.project.controller.sync.command.Command;
 import by.epam.project.controller.sync.command.CommandType;
 import by.epam.project.entity.User;
 import by.epam.project.util.URLUtil;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,6 +19,7 @@ import static by.epam.project.controller.parameter.Parameter.USER;
 /**
  * The type Change language command.
  */
+@Component("change_language")
 public class ChangeLanguageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
